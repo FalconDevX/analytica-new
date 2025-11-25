@@ -2,9 +2,6 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
-import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
-import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 
 export default function Sphere() {
     const mountRef = useRef<HTMLDivElement | null>(null);
@@ -14,6 +11,7 @@ export default function Sphere() {
 
         //tworzenie sceny i kamery
         const scene = new THREE.Scene();
+        scene.background = null; 
         const camera = new THREE.PerspectiveCamera(
             75,
             mountRef.current.clientWidth / mountRef.current.clientHeight,
@@ -22,7 +20,12 @@ export default function Sphere() {
         );
         camera.position.z = 3;
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        const renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: true, // przezroczyste tło 
+        });
+        renderer.setClearColor(0x000000, 0);
+        renderer.domElement.style.background = "transparent";
         renderer.setSize(
             mountRef.current.clientWidth,
             mountRef.current.clientHeight
@@ -38,29 +41,8 @@ export default function Sphere() {
         controls.enablePan = false;
         controls.enableZoom = false;
 
-        //efkt glow
-        const composer = new EffectComposer(renderer);
-        composer.setSize(
-            mountRef.current.clientWidth,
-            mountRef.current.clientHeight
-        );
-
-        const renderPass = new RenderPass(scene, camera);
-        composer.addPass(renderPass);
-
-        const bloomPass = new UnrealBloomPass(
-            new THREE.Vector2(
-                mountRef.current.clientWidth,
-                mountRef.current.clientHeight
-            ),
-            0.6, // siła
-            0.4, // promień
-            0.85 // próg
-        );
-        composer.addPass(bloomPass);
-
         //punkty sfery fibo (elimnacja promieni)
-        const N = 9000; 
+        const N = 9000;
         const points = [];
         const offset = 2 / N;
         const increment = Math.PI * (3 - Math.sqrt(5));
@@ -105,8 +87,21 @@ export default function Sphere() {
         const mouse = new THREE.Vector2();
         const mouseWorld = new THREE.Vector3();
         const raycaster = new THREE.Raycaster();
+        let isHovering = false;
+
+        const handleMouseEnter = () => {
+            isHovering = true;
+        };
+
+        const handleMouseLeave = () => {
+            isHovering = false;
+            //kursor poza scene 
+            mouseWorld.set(999, 999, 999);
+        };
 
         const handleMouseMove = (event: MouseEvent) => {
+            if (!isHovering) return;
+
             mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -117,6 +112,11 @@ export default function Sphere() {
                 raycaster.ray.direction.multiplyScalar(distance)
             );
         };
+
+        if (mountRef.current) {
+            mountRef.current.addEventListener("mouseenter", handleMouseEnter);
+            mountRef.current.addEventListener("mouseleave", handleMouseLeave);
+        }
         window.addEventListener("mousemove", handleMouseMove);
 
         //zmiana rozmiaru
@@ -128,8 +128,6 @@ export default function Sphere() {
             camera.updateProjectionMatrix();
 
             renderer.setSize(clientWidth, clientHeight);
-            composer.setSize(clientWidth, clientHeight);
-            bloomPass.setSize(clientWidth, clientHeight);
         };
         window.addEventListener("resize", handleResize);
 
@@ -138,6 +136,32 @@ export default function Sphere() {
             const positions = geometry.attributes.position as THREE.BufferAttribute;
             const strength = 0.06;
             const returnSpeed = 0.05;
+
+            if (!isHovering) {
+                // jeśli nie ma kursora – reset do pozycji bazowych, 0 interakcji
+                for (let i = 0; i < positions.count; i++) {
+                    const baseX = basePositions[i * 3];
+                    const baseY = basePositions[i * 3 + 1];
+                    const baseZ = basePositions[i * 3 + 2];
+
+                    const currentX = positions.getX(i);
+                    const currentY = positions.getY(i);
+                    const currentZ = positions.getZ(i);
+
+                    positions.setXYZ(
+                        i,
+                        currentX + (baseX - currentX) * 0.05,
+                        currentY + (baseY - currentY) * 0.05,
+                        currentZ + (baseZ - currentZ) * 0.05
+                    );
+                }
+                positions.needsUpdate = true;
+
+                controls.update();
+                renderer.render(scene, camera);
+                requestAnimationFrame(animate);
+                return;
+            }
 
             for (let i = 0; i < positions.count; i++) {
                 const currentX = positions.getX(i);
@@ -189,8 +213,7 @@ export default function Sphere() {
             positions.needsUpdate = true;
 
             controls.update();
-
-            composer.render();
+            renderer.render(scene, camera);
             requestAnimationFrame(animate);
         };
 
@@ -199,10 +222,12 @@ export default function Sphere() {
         //czyszczenie po zakończeniu animacji
         return () => {
             controls.dispose();
+            if (mountRef.current) {
+                mountRef.current.removeEventListener("mouseenter", handleMouseEnter);
+                mountRef.current.removeEventListener("mouseleave", handleMouseLeave);
+            }
             window.removeEventListener("resize", handleResize);
             window.removeEventListener("mousemove", handleMouseMove);
-            composer.dispose();
-            bloomPass.dispose();
             mountRef.current?.removeChild(renderer.domElement);
             renderer.dispose();
             geometry.dispose();
@@ -213,7 +238,14 @@ export default function Sphere() {
     return (
         <div
             ref={mountRef}
-            style={{ width: "100%", height: "100vh", overflow: "hidden" }}
+            style={{
+                width: "100%",
+                height: "100vh",
+                overflow: "hidden",
+                position: "absolute",
+                inset: 0,
+                zIndex: 1,
+            }}
         />
     );
 }
