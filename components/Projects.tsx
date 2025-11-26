@@ -2,8 +2,8 @@ import React from 'react'
 
 const Projects = () => {
     return (
-        <div className='appear w-full min-h-[90vh] flex flex-col items-center justify-start'>
-            <h1 className='text-2xl p-6'>Projects</h1>
+        <div id = "projects" className="appear w-full min-h-[90vh] flex flex-col items-center justify-start scroll-mt-20">
+            <h1 className="text-2xl p-6">Projects</h1>
             <div className="flex flex-row gap-5">
                 <div className="max-w-xl">
                     <h3 className="text-white text-lg p-3">Developers’ Chat</h3>
@@ -11,7 +11,7 @@ const Projects = () => {
 
                         <img
                             src="project-geo.png"
-                            className="w-full h-auto object-contain"
+                            className="w-full h-[300px] object-contain"
                         />
 
                         {/* górny lewy */}
