@@ -6,7 +6,7 @@ const Welcome = () => {
             <img src="/background.png" alt="Background" className="w-full absolute inset-0 m-auto z-0 pointer-events-none" />
             <Sphere />
             {/*Tło gradientowe logo*/}
-            <div    
+            <div
                 className="absolute inset-0 m-auto pointer-events-none z-2"
                 style={{
                     width: "300px",

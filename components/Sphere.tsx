@@ -22,7 +22,7 @@ export default function Sphere() {
 
         const renderer = new THREE.WebGLRenderer({
             antialias: true,
-            alpha: true, // przezroczyste tło 
+            alpha: true,
         });
         renderer.setClearColor(0x000000, 0);
         renderer.domElement.style.background = "transparent";
@@ -100,10 +100,12 @@ export default function Sphere() {
         };
 
         const handleMouseMove = (event: MouseEvent) => {
-            if (!isHovering) return;
+            if (!isHovering || !mountRef.current) return;
 
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            const rect = mountRef.current.getBoundingClientRect();
+
+            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
             //projekcia kursora na płaszczyznę z = 0
             raycaster.setFromCamera(mouse, camera);
@@ -116,8 +118,8 @@ export default function Sphere() {
         if (mountRef.current) {
             mountRef.current.addEventListener("mouseenter", handleMouseEnter);
             mountRef.current.addEventListener("mouseleave", handleMouseLeave);
+            mountRef.current.addEventListener("mousemove", handleMouseMove);
         }
-        window.addEventListener("mousemove", handleMouseMove);
 
         //zmiana rozmiaru
         const handleResize = () => {
@@ -225,10 +227,10 @@ export default function Sphere() {
             if (mountRef.current) {
                 mountRef.current.removeEventListener("mouseenter", handleMouseEnter);
                 mountRef.current.removeEventListener("mouseleave", handleMouseLeave);
+                mountRef.current.removeEventListener("mousemove", handleMouseMove);
+                mountRef.current.removeChild(renderer.domElement);
             }
             window.removeEventListener("resize", handleResize);
-            window.removeEventListener("mousemove", handleMouseMove);
-            mountRef.current?.removeChild(renderer.domElement);
             renderer.dispose();
             geometry.dispose();
             material.dispose();
