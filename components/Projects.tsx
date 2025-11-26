@@ -1,19 +1,20 @@
-import React from 'react'
+"use client";
+import useTilt from "@/hooks/useTilt";
 
 const Projects = () => {
+    useTilt();
     return (
         <div id = "projects" className="appear w-full min-h-[90vh] flex flex-col items-center justify-start scroll-mt-20">
             <h1 className="text-2xl p-6">Projects</h1>
             <div className="flex flex-row gap-5">
                 <div className="max-w-xl">
-                    <h3 className="text-white text-lg p-3">Developers’ Chat</h3>
-                    <div className="relative inline-block p-3">
-
-                        <img
+                    <h3 className="text-white text-lg p-3" >Developers’ Chat</h3>
+                    <div className="relative inline-block p-3" data-tilt>
+                        <img 
                             src="project-geo.png"
                             className="w-full h-[300px] object-contain"
+                            data-tilt data-tilt-max="20"
                         />
-
                         {/* górny lewy */}
                         <span className="absolute top-0 left-0 w-[20px] h-[3px] bg-white"></span>
                         <span className="absolute top-0 left-0 w-[3px] h-[20px] bg-white"></span>
@@ -27,11 +28,12 @@ const Projects = () => {
                 </div>
                 <div className="max-w-xl">
                     <h3 className="text-white text-lg p-3">Developers’ Chat</h3>
-                    <div className="relative inline-block p-3">
+                    <div className="relative inline-block p-3" data-tilt>
 
                         <img
                             src="project-trade.png"
                             className="w-full h-auto object-contain"
+                            data-tilt data-tilt-max="20"
                         />
 
                         {/* górny lewy */}
