@@ -140,7 +140,7 @@ export default function Sphere() {
             const returnSpeed = 0.05;
 
             if (!isHovering) {
-                // jeśli nie ma kursora – reset do pozycji bazowych, 0 interakcji
+                //brak kursora - reset do pozycji bazowych
                 for (let i = 0; i < positions.count; i++) {
                     const baseX = basePositions[i * 3];
                     const baseY = basePositions[i * 3 + 1];
