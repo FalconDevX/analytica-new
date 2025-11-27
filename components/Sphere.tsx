@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 export default function Sphere() {
     const mountRef = useRef<HTMLDivElement | null>(null);
@@ -9,7 +8,6 @@ export default function Sphere() {
     useEffect(() => {
         if (!mountRef.current) return;
 
-        //tworzenie sceny i kamery
         const scene = new THREE.Scene();
         scene.background = null; 
         const camera = new THREE.PerspectiveCamera(
@@ -33,16 +31,7 @@ export default function Sphere() {
         mountRef.current.appendChild(renderer.domElement);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        const controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.04;
-        controls.rotateSpeed = 0.5;
-        controls.zoomSpeed = 0.6;
-        controls.enablePan = false;
-        controls.enableZoom = false;
-
-        //punkty sfery fibo (elimnacja promieni)
-        const N = 9000;
+        const N = 20000;
         const points = [];
         const offset = 2 / N;
         const increment = Math.PI * (3 - Math.sqrt(5));
@@ -60,7 +49,11 @@ export default function Sphere() {
 
         const basePositions = new Float32Array(points);
 
-        //randomowe opóznienie dla każdego punktu
+        const oscPhase = new Float32Array(N);
+        for (let i = 0; i < N; i++) {
+            oscPhase[i] = Math.random() * Math.PI * 2;
+        }
+
         const introDurations = new Float32Array(N);
         const minIntroDuration = 0.8;
         const maxIntroDuration = 1.0;
@@ -74,7 +67,6 @@ export default function Sphere() {
             new THREE.Float32BufferAttribute(points, 3)
         );
 
-        //wszystkie punkty na środku
         const startPositions = new Float32Array(N * 3);
         for (let i = 0; i < N; i++) {
             startPositions[i * 3] = 0;
@@ -84,8 +76,16 @@ export default function Sphere() {
         (geometry.attributes.position.array as Float32Array).set(startPositions);
         geometry.attributes.position.needsUpdate = true;
 
-        //wczytywanie tekstury
-        const texture = new THREE.TextureLoader().load("/circle.png");
+        const canvas = document.createElement('canvas');
+        canvas.width = 64;
+        canvas.height = 64;
+        const ctx = canvas.getContext('2d')!;
+        const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+        gradient.addColorStop(0, 'rgba(255,255,255,1)');
+        gradient.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 64, 64);
+        const texture = new THREE.CanvasTexture(canvas);
 
         const material = new THREE.PointsMaterial({
             color: "white",
@@ -101,10 +101,116 @@ export default function Sphere() {
         sphere.scale.setScalar(1.15);
         scene.add(sphere);
 
+        const maxLineDistance = 0.07;
+        const maxLineDistanceSq = maxLineDistance * maxLineDistance;
+        const maxConnectionsPerPoint = 5;
+        const maxSegments = 100000;
+        const linePointsCount = 30000;
+
+        const neighborPairs: number[] = [];
+        const connectionsCount = new Uint16Array(N);
+
+        const cellSize = maxLineDistance;
+        const invCellSize = 1 / cellSize;
+        const cellMap = new Map<string, number[]>();
+
+        const getCellKey = (x: number, y: number, z: number) => {
+            const ix = Math.floor(x * invCellSize);
+            const iy = Math.floor(y * invCellSize);
+            const iz = Math.floor(z * invCellSize);
+            return `${ix},${iy},${iz}`;
+        };
+
+        const usableCount = Math.min(linePointsCount, N);
+
+        // 1) wrzucamy punkty do komórek
+        for (let i = 0; i < usableCount; i++) {
+            const bx = basePositions[i * 3];
+            const by = basePositions[i * 3 + 1];
+            const bz = basePositions[i * 3 + 2];
+            const key = getCellKey(bx, by, bz);
+            const arr = cellMap.get(key);
+            if (arr) {
+                arr.push(i);
+            } else {
+                cellMap.set(key, [i]);
+            }
+        }
+
+        // 2) szukamy najbliższych sąsiadów w otoczeniu komórki
+        let segmentCount = 0;
+        for (let i = 0; i < usableCount && segmentCount < maxSegments; i++) {
+            if (connectionsCount[i] >= maxConnectionsPerPoint) continue;
+
+            const bx = basePositions[i * 3];
+            const by = basePositions[i * 3 + 1];
+            const bz = basePositions[i * 3 + 2];
+
+            const cx = Math.floor(bx * invCellSize);
+            const cy = Math.floor(by * invCellSize);
+            const cz = Math.floor(bz * invCellSize);
+
+            for (let dx = -1; dx <= 1; dx++) {
+                for (let dy = -1; dy <= 1; dy++) {
+                    for (let dz = -1; dz <= 1; dz++) {
+                        const key = `${cx + dx},${cy + dy},${cz + dz}`;
+                        const arr = cellMap.get(key);
+                        if (!arr) continue;
+
+                        for (const j of arr) {
+                            if (j <= i) continue;
+                            if (connectionsCount[i] >= maxConnectionsPerPoint) break;
+                            if (connectionsCount[j] >= maxConnectionsPerPoint) continue;
+                            if (segmentCount >= maxSegments) break;
+
+                            const bx2 = basePositions[j * 3];
+                            const by2 = basePositions[j * 3 + 1];
+                            const bz2 = basePositions[j * 3 + 2];
+
+                            const dxp = bx2 - bx;
+                            const dyp = by2 - by;
+                            const dzp = bz2 - bz;
+                            const distSq = dxp * dxp + dyp * dyp + dzp * dzp;
+
+                            if (distSq <= maxLineDistanceSq) {
+                                neighborPairs.push(i, j);
+                                connectionsCount[i]++;
+                                connectionsCount[j]++;
+                                segmentCount++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        let linePositions: Float32Array | null = null;
+        let lineGeometry: THREE.BufferGeometry | null = null;
+        let lineMaterial: THREE.LineBasicMaterial | null = null;
+        let lineSegments: THREE.LineSegments | null = null;
+
+        if (segmentCount > 0) {
+            linePositions = new Float32Array(segmentCount * 2 * 3);
+            lineGeometry = new THREE.BufferGeometry();
+            lineGeometry.setAttribute(
+                "position",
+                new THREE.BufferAttribute(linePositions, 3)
+            );
+            lineMaterial = new THREE.LineBasicMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.02,         // subtelniejsze linie
+                depthWrite: false,
+                blending: THREE.AdditiveBlending,
+                linewidth: 0.1
+            });
+            lineSegments = new THREE.LineSegments(lineGeometry, lineMaterial);
+            sphere.add(lineSegments);
+        }
+
         let isIntro = true;
         let introProgress = 0;
 
-        //interakcja z kursorem
         const mouse = new THREE.Vector2();
         const mouseWorld = new THREE.Vector3();
         const raycaster = new THREE.Raycaster();
@@ -116,7 +222,6 @@ export default function Sphere() {
 
         const handleMouseLeave = () => {
             isHovering = false;
-            //kursor poza scene 
             mouseWorld.set(999, 999, 999);
         };
 
@@ -128,7 +233,6 @@ export default function Sphere() {
             mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
             mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
-            //projekcia kursora na płaszczyznę z = 0
             raycaster.setFromCamera(mouse, camera);
             const distance = -raycaster.ray.origin.z / raycaster.ray.direction.z;
             mouseWorld.copy(raycaster.ray.origin).add(
@@ -142,7 +246,6 @@ export default function Sphere() {
             mountRef.current.addEventListener("mousemove", handleMouseMove);
         }
 
-        //zmiana rozmiaru
         const handleResize = () => {
             if (!mountRef.current) return;
             const { clientWidth, clientHeight } = mountRef.current;
@@ -154,11 +257,14 @@ export default function Sphere() {
         };
         window.addEventListener("resize", handleResize);
 
-        //animacja
+        const oscAmplitude = 0.015;
+        const oscSpeed = 1.5;
+
         const animate = () => {
-            //animacja intro - punkty przesuwają się z środka na powierzchnię sfery
+            sphere.rotation.y += 0.002;
+
             if (isIntro) {
-                introProgress += 0.015; // approx. time step
+                introProgress += 0.015;
 
                 const positions = geometry.attributes.position as THREE.BufferAttribute;
 
@@ -176,7 +282,6 @@ export default function Sphere() {
                         allDone = false;
                     }
 
-                    //droga z środka dp pozycjina powierzchni sfery z indywidualnym opóźnieniem
                     positions.setXYZ(
                         i,
                         baseX * tPoint,
@@ -191,7 +296,6 @@ export default function Sphere() {
                     isIntro = false;
                 }
 
-                controls.update();
                 renderer.render(scene, camera);
                 requestAnimationFrame(animate);
                 return;
@@ -201,8 +305,11 @@ export default function Sphere() {
             const strength = 0.06;
             const returnSpeed = 0.05;
 
+            const worldMatrix = sphere.matrixWorld;
+
+            const time = performance.now() * 0.001;
+
             if (!isHovering) {
-                //brak kursora - reset do pozycji bazowych
                 for (let i = 0; i < positions.count; i++) {
                     const baseX = basePositions[i * 3];
                     const baseY = basePositions[i * 3 + 1];
@@ -212,41 +319,92 @@ export default function Sphere() {
                     const currentY = positions.getY(i);
                     const currentZ = positions.getZ(i);
 
+                    const phase = oscPhase[i];
+
+                    const osc = Math.sin(time * oscSpeed + phase) * oscAmplitude;
+
+                    const len = Math.sqrt(baseX * baseX + baseY * baseY + baseZ * baseZ);
+                    const nx = baseX / len;
+                    const ny = baseY / len;
+                    const nz = baseZ / len;
+
+                    const targetX = baseX + nx * osc;
+                    const targetY = baseY + ny * osc;
+                    const targetZ = baseZ + nz * osc;
+
                     positions.setXYZ(
                         i,
-                        currentX + (baseX - currentX) * 0.05,
-                        currentY + (baseY - currentY) * 0.05,
-                        currentZ + (baseZ - currentZ) * 0.05
+                        currentX + (targetX - currentX) * 0.08,
+                        currentY + (targetY - currentY) * 0.08,
+                        currentZ + (targetZ - currentZ) * 0.08
                     );
                 }
-                positions.needsUpdate = true;
 
-                controls.update();
+                if (linePositions && lineGeometry && neighborPairs.length > 0) {
+                    const linePosAttr = lineGeometry.attributes
+                        .position as THREE.BufferAttribute;
+                    const segCount = neighborPairs.length / 2;
+                    for (let s = 0; s < segCount; s++) {
+                        const i = neighborPairs[s * 2];
+                        const j = neighborPairs[s * 2 + 1];
+
+                        const x1 = positions.getX(i);
+                        const y1 = positions.getY(i);
+                        const z1 = positions.getZ(i);
+                        const x2 = positions.getX(j);
+                        const y2 = positions.getY(j);
+                        const z2 = positions.getZ(j);
+
+                        const idx = s * 6;
+                        linePositions[idx] = x1;
+                        linePositions[idx + 1] = y1;
+                        linePositions[idx + 2] = z1;
+                        linePositions[idx + 3] = x2;
+                        linePositions[idx + 4] = y2;
+                        linePositions[idx + 5] = z2;
+                    }
+                    linePosAttr.needsUpdate = true;
+                }
+
+                positions.needsUpdate = true;
                 renderer.render(scene, camera);
                 requestAnimationFrame(animate);
                 return;
             }
 
             for (let i = 0; i < positions.count; i++) {
-                const currentX = positions.getX(i);
-                const currentY = positions.getY(i);
-                const currentZ = positions.getZ(i);
-
                 const baseX = basePositions[i * 3];
                 const baseY = basePositions[i * 3 + 1];
                 const baseZ = basePositions[i * 3 + 2];
 
-                const dx = mouseWorld.x - currentX;
-                const dy = mouseWorld.y - currentY;
-                const dz = mouseWorld.z - currentZ;
+                const currentX = positions.getX(i);
+                const currentY = positions.getY(i);
+                const currentZ = positions.getZ(i);
+
+                const phase = oscPhase[i];
+                const osc = Math.sin(time * oscSpeed + phase) * oscAmplitude;
+                const len = Math.sqrt(baseX * baseX + baseY * baseY + baseZ * baseZ);
+                const nx = baseX / len;
+                const ny = baseY / len;
+                const nz = baseZ / len;
+                const oscTargetX = baseX + nx * osc;
+                const oscTargetY = baseY + ny * osc;
+                const oscTargetZ = baseZ + nz * osc;
+
+                const pointWorld = new THREE.Vector3(currentX, currentY, currentZ);
+                pointWorld.applyMatrix4(worldMatrix);
+
+                const dx = mouseWorld.x - pointWorld.x;
+                const dy = mouseWorld.y - pointWorld.y;
+                const dz = mouseWorld.z - pointWorld.z;
                 const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
                 const influence = Math.exp(-dist * 4.5) * strength * 10.0;
 
                 if (influence > 0.0005) {
                     const minDist = 0.25;
                     const damp = Math.max(dist / minDist, 1);
 
-                    //limit maksymalnego odciągnięcia od powierzchni sfery
                     const MAX_DIST = 0.35;
                     let newX = currentX + (dx / damp) * influence;
                     let newY = currentY + (dy / damp) * influence;
@@ -268,15 +426,40 @@ export default function Sphere() {
                 } else {
                     positions.setXYZ(
                         i,
-                        currentX + (baseX - currentX) * returnSpeed,
-                        currentY + (baseY - currentY) * returnSpeed,
-                        currentZ + (baseZ - currentZ) * returnSpeed
+                        currentX + (oscTargetX - currentX) * returnSpeed,
+                        currentY + (oscTargetY - currentY) * returnSpeed,
+                        currentZ + (oscTargetZ - currentZ) * returnSpeed
                     );
                 }
             }
-            positions.needsUpdate = true;
 
-            controls.update();
+            if (linePositions && lineGeometry && neighborPairs.length > 0) {
+                const linePosAttr = lineGeometry.attributes
+                    .position as THREE.BufferAttribute;
+                const segCount = neighborPairs.length / 2;
+                for (let s = 0; s < segCount; s++) {
+                    const i = neighborPairs[s * 2];
+                    const j = neighborPairs[s * 2 + 1];
+
+                    const x1 = positions.getX(i);
+                    const y1 = positions.getY(i);
+                    const z1 = positions.getZ(i);
+                    const x2 = positions.getX(j);
+                    const y2 = positions.getY(j);
+                    const z2 = positions.getZ(j);
+
+                    const idx = s * 6;
+                    linePositions[idx] = x1;
+                    linePositions[idx + 1] = y1;
+                    linePositions[idx + 2] = z1;
+                    linePositions[idx + 3] = x2;
+                    linePositions[idx + 4] = y2;
+                    linePositions[idx + 5] = z2;
+                }
+                linePosAttr.needsUpdate = true;
+            }
+
+            positions.needsUpdate = true;
             renderer.render(scene, camera);
             requestAnimationFrame(animate);
         };
@@ -285,17 +468,20 @@ export default function Sphere() {
 
         //czyszczenie po zakończeniu animacji
         return () => {
-            controls.dispose();
             if (mountRef.current) {
                 mountRef.current.removeEventListener("mouseenter", handleMouseEnter);
                 mountRef.current.removeEventListener("mouseleave", handleMouseLeave);
                 mountRef.current.removeEventListener("mousemove", handleMouseMove);
-                mountRef.current.removeChild(renderer.domElement);
+                if (renderer.domElement.parentElement === mountRef.current) {
+                    mountRef.current.removeChild(renderer.domElement);
+                }
             }
             window.removeEventListener("resize", handleResize);
             renderer.dispose();
             geometry.dispose();
             material.dispose();
+            if (lineGeometry) lineGeometry.dispose();
+            if (lineMaterial) lineMaterial.dispose();
         };
     }, []);
 
