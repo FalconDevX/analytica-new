@@ -10,7 +10,7 @@ const About = () => {
         </div>
         <div className="w-full md:w-1/2 px-5">
           <div className="relative inline-block p-3">
-            <img src="/ekipa.jpg" alt="About Us" className="h-100 w-auto object-contain object-top" />
+            <img src="/ekipa.jpg" alt="About Us" className="h-auto w-auto object-contain object-top" />
 
             {/* górny lewy */}
             <span className="absolute top-0 left-0 w-[20px] h-[3px] bg-white"></span>

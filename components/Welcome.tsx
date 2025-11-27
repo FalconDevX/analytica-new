@@ -1,13 +1,27 @@
-import Sphere from './Sphere'
+"use client";
+import { useRive } from "@rive-app/react-canvas";
+import Sphere from "./Sphere";
 
 const Welcome = () => {
+    const { RiveComponent } = useRive({
+        src: "/analyticalogo.riv",
+        stateMachines: "State Machine 1",
+        autoplay: true,
+    });
+
     return (
-        <div className='w-full h-screen relative overflow-hidden'>
-            <img src="/background.png" alt="Background" className="w-full absolute inset-0 m-auto z-0 pointer-events-none" />
+        <div className='w-full h-screen relative overflow-hidden bg-transparent'>
+            <img 
+                src="/background.png" 
+                alt="Background"
+                className="w-full h-full absolute inset-0 object-cover z-0 pointer-events-none"
+            />
+
             <Sphere />
-            {/*Tło gradientowe logo*/}
+
+            {/* glow pod logo */}
             <div
-                className="absolute inset-0 m-auto pointer-events-none z-2"
+                className="absolute inset-0 m-auto pointer-events-none z-20"
                 style={{
                     width: "300px",
                     height: "300px",
@@ -16,17 +30,15 @@ const Welcome = () => {
                     filter: "blur(20px)",
                 }}
             />
-            {/*Logo*/}
-            <img
-                src="/analytica_logo1-white.png"
-                className="absolute inset-0 m-auto pointer-events-none z-3 pr-5 "
-                style={{
-                    width: "350px",
-                    height: "auto",
-                }}
-            />
+
+            {/* Rive.app logo */}
+            <div className="absolute inset-0 m-auto z-30 flex items-center justify-center pointer-events-none pr-9">
+                <div className="w-[350px] h-[350px]">
+                    {RiveComponent && <RiveComponent />}
+                </div>
+            </div>
         </div>
     )
 }
 
-export default Welcome
+export default Welcome;

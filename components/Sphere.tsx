@@ -60,11 +60,29 @@ export default function Sphere() {
 
         const basePositions = new Float32Array(points);
 
+        //randomowe opóznienie dla każdego punktu
+        const introDurations = new Float32Array(N);
+        const minIntroDuration = 0.8;
+        const maxIntroDuration = 1.0;
+        for (let i = 0; i < N; i++) {
+            introDurations[i] = minIntroDuration + Math.random() * (maxIntroDuration - minIntroDuration);
+        }
+
         const geometry = new THREE.BufferGeometry();
         geometry.setAttribute(
             "position",
             new THREE.Float32BufferAttribute(points, 3)
         );
+
+        //wszystkie punkty na środku
+        const startPositions = new Float32Array(N * 3);
+        for (let i = 0; i < N; i++) {
+            startPositions[i * 3] = 0;
+            startPositions[i * 3 + 1] = 0;
+            startPositions[i * 3 + 2] = 0;
+        }
+        (geometry.attributes.position.array as Float32Array).set(startPositions);
+        geometry.attributes.position.needsUpdate = true;
 
         //wczytywanie tekstury
         const texture = new THREE.TextureLoader().load("/circle.png");
@@ -82,6 +100,9 @@ export default function Sphere() {
         const sphere = new THREE.Points(geometry, material);
         sphere.scale.setScalar(1.15);
         scene.add(sphere);
+
+        let isIntro = true;
+        let introProgress = 0;
 
         //interakcja z kursorem
         const mouse = new THREE.Vector2();
@@ -135,6 +156,47 @@ export default function Sphere() {
 
         //animacja
         const animate = () => {
+            //animacja intro - punkty przesuwają się z środka na powierzchnię sfery
+            if (isIntro) {
+                introProgress += 0.015; // approx. time step
+
+                const positions = geometry.attributes.position as THREE.BufferAttribute;
+
+                let allDone = true;
+
+                for (let i = 0; i < positions.count; i++) {
+                    const baseX = basePositions[i * 3];
+                    const baseY = basePositions[i * 3 + 1];
+                    const baseZ = basePositions[i * 3 + 2];
+
+                    const duration = introDurations[i];
+                    const tPoint = Math.min(introProgress / duration, 1);
+
+                    if (tPoint < 1) {
+                        allDone = false;
+                    }
+
+                    //droga z środka dp pozycjina powierzchni sfery z indywidualnym opóźnieniem
+                    positions.setXYZ(
+                        i,
+                        baseX * tPoint,
+                        baseY * tPoint,
+                        baseZ * tPoint
+                    );
+                }
+
+                positions.needsUpdate = true;
+
+                if (allDone) {
+                    isIntro = false;
+                }
+
+                controls.update();
+                renderer.render(scene, camera);
+                requestAnimationFrame(animate);
+                return;
+            }
+
             const positions = geometry.attributes.position as THREE.BufferAttribute;
             const strength = 0.06;
             const returnSpeed = 0.05;

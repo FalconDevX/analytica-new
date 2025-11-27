@@ -35,7 +35,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
-        <Script src="/vanilla-tilt.js" strategy="afterInteractive" />
+        {/* <Script src="/vanilla-tilt.js" strategy="afterInteractive" /> */}
       </body>
     </html>
   );
