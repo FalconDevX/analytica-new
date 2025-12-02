@@ -34,17 +34,17 @@ const Contact = () => {
 
     return (
         <div id="contact" className="appear w-full min-h-[70vh] flex flex-col items-center px-5 md:px-0">
-            <h1 className="text-2xl p-6">Contact Us</h1>
-            <h3 className="text-gray-400 mb-3">Interested in our projects? Get in touch with us using the form below:</h3>
+            <h1 className="text-2xl p-6 text-black dark:text-white">Contact Us</h1>
+            <h3 className="text-gray-900 dark:text-gray-400 mb-3">Interested in our projects? Get in touch with us using the form below:</h3>
             <form onSubmit={handleSubmit} className="w-full max-w-xl flex flex-col gap-2">
-                <input value={username} onChange={(e) => setUsername(e.target.value)} className="text-white focus:outline-none focus:border-white border-gray-400 border-2 rounded-none p-2" type="text" placeholder="Name" />
-                <input value={email} onChange={(e) => setEmail(e.target.value)} className="text-white focus:outline-none focus:border-white border-gray-400 border-2 rounded-none p-2" type="email" placeholder="Email" />
-                <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="min-h-20 text-white focus:outline-none focus:border-white border-gray-400 border-2 rounded-none p-2 resize-none " placeholder="Message" />
-                <button type="submit" className="w-full border-2 focus:outline-none focus:border-white border-gray-400 text-white bg-black px-4 py-2 transition-all duration-200 hover:bg-white hover:text-black hover:border-white cursor-pointer">
+                <input value={username} onChange={(e) => setUsername(e.target.value)} className="text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white border-gray-400 border-2 rounded-none p-2" type="text" placeholder="Name" />
+                <input value={email} onChange={(e) => setEmail(e.target.value)} className="text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white border-gray-400 border-2 rounded-none p-2" type="email" placeholder="Email" />
+                <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="min-h-20 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white border-gray-400 border-2 rounded-none p-2 resize-none " placeholder="Message" />
+                <button type="submit" className="w-full border-2 focus:outline-none focus:border-black dark:focus:border-white border-gray-400 dark:border-gray-400 text-black dark:text-white bg-white dark:bg-black px-4 py-2 transition-all duration-200 hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black hover:border-black cursor-pointer">
                     Send
                 </button>
             </form>
-            {status && <p className="text-white text-sm mt-2">{status}</p>}
+            {status && <p className="text-black dark:text-white text-sm mt-2">{status}</p>}
         </div>
     )
 }

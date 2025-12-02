@@ -1,6 +1,5 @@
 import View from './View'
 import Welcome from './Welcome'
-import Footer from './Footer'
 import Navbar from './Navbar'
 
 const Home = () => {

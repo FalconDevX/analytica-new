@@ -6,7 +6,7 @@ import Contact from './Contact'
 import Footer from './Footer'
 const View = () => {
     return (
-        <div>
+        <div className="bg-white dark:bg-black">
             <About />
             <Projects />
             <Contact />

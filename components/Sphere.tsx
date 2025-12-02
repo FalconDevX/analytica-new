@@ -1,15 +1,20 @@
 "use client";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { useTheme } from "next-themes";
 
 export default function Sphere() {
     const mountRef = useRef<HTMLDivElement | null>(null);
+    const materialRef = useRef<THREE.PointsMaterial | null>(null);
+    const lineMaterialRef = useRef<THREE.LineBasicMaterial | null>(null);
+    const textureRef = useRef<THREE.CanvasTexture | null>(null);
+    const { theme } = useTheme();
 
     useEffect(() => {
         if (!mountRef.current) return;
 
         const scene = new THREE.Scene();
-        scene.background = null; 
+        scene.background = null;
         const camera = new THREE.PerspectiveCamera(
             75,
             mountRef.current.clientWidth / mountRef.current.clientHeight,
@@ -22,7 +27,7 @@ export default function Sphere() {
             antialias: true,
             alpha: true,
         });
-        renderer.setClearColor(0x000000, 0);
+        renderer.setClearColor(theme === "dark" ? 0x000000 : 0xffffff, 0);
         renderer.domElement.style.background = "transparent";
         renderer.setSize(
             mountRef.current.clientWidth,
@@ -81,14 +86,15 @@ export default function Sphere() {
         canvas.height = 64;
         const ctx = canvas.getContext('2d')!;
         const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-        gradient.addColorStop(0, 'rgba(255,255,255,1)');
-        gradient.addColorStop(1, 'rgba(255,255,255,0)');
+        gradient.addColorStop(0, theme === "dark" ? 'rgba(255,255,255,1)' : 'rgba(0,0,0,1)');
+        gradient.addColorStop(1, theme === "dark" ? 'rgba(255,255,255,0)' : 'rgba(0,0,0,0)');
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, 64, 64);
         const texture = new THREE.CanvasTexture(canvas);
+        textureRef.current = texture;
 
         const material = new THREE.PointsMaterial({
-            color: "white",
+            color: theme === "dark" ? "white" : "black",
             size: 0.01,
             map: texture,
             alphaMap: texture,
@@ -96,6 +102,8 @@ export default function Sphere() {
             depthWrite: false,
             blending: THREE.AdditiveBlending,
         });
+
+        materialRef.current = material;
 
         const sphere = new THREE.Points(geometry, material);
         sphere.scale.setScalar(1.15);
@@ -122,8 +130,6 @@ export default function Sphere() {
         };
 
         const usableCount = Math.min(linePointsCount, N);
-
-        // 1) wrzucamy punkty do komórek
         for (let i = 0; i < usableCount; i++) {
             const bx = basePositions[i * 3];
             const by = basePositions[i * 3 + 1];
@@ -136,8 +142,6 @@ export default function Sphere() {
                 cellMap.set(key, [i]);
             }
         }
-
-        // 2) szukamy najbliższych sąsiadów w otoczeniu komórki
         let segmentCount = 0;
         for (let i = 0; i < usableCount && segmentCount < maxSegments; i++) {
             if (connectionsCount[i] >= maxConnectionsPerPoint) continue;
@@ -197,13 +201,14 @@ export default function Sphere() {
                 new THREE.BufferAttribute(linePositions, 3)
             );
             lineMaterial = new THREE.LineBasicMaterial({
-                color: 0xffffff,
+                color: theme === "dark" ? 0xffffff : 0x000000,
                 transparent: true,
-                opacity: 0.02,         // subtelniejsze linie
+                opacity: 0.02,        
                 depthWrite: false,
                 blending: THREE.AdditiveBlending,
                 linewidth: 0.1
             });
+            lineMaterialRef.current = lineMaterial;
             lineSegments = new THREE.LineSegments(lineGeometry, lineMaterial);
             sphere.add(lineSegments);
         }
@@ -465,8 +470,6 @@ export default function Sphere() {
         };
 
         animate();
-
-        //czyszczenie po zakończeniu animacji
         return () => {
             if (mountRef.current) {
                 mountRef.current.removeEventListener("mouseenter", handleMouseEnter);
@@ -479,11 +482,60 @@ export default function Sphere() {
             window.removeEventListener("resize", handleResize);
             renderer.dispose();
             geometry.dispose();
-            material.dispose();
+            if (materialRef.current) materialRef.current.dispose();
             if (lineGeometry) lineGeometry.dispose();
-            if (lineMaterial) lineMaterial.dispose();
+            if (lineMaterialRef.current) lineMaterialRef.current.dispose();
+            if (textureRef.current) textureRef.current.dispose();
         };
     }, []);
+
+    useEffect(() => {
+        if (!materialRef.current) return;
+        const isDark = theme === "dark";
+        materialRef.current.color.set(isDark ? "white" : "black");
+        materialRef.current.blending = isDark
+            ? THREE.AdditiveBlending
+            : THREE.NormalBlending;
+        if (isDark) {
+            if (textureRef.current) {
+                materialRef.current.map = textureRef.current;
+                materialRef.current.alphaMap = textureRef.current;
+            }
+            materialRef.current.opacity = 1.0;
+            materialRef.current.transparent = true;
+        } else {
+
+            materialRef.current.map = null;
+            materialRef.current.alphaMap = null;
+
+            materialRef.current.opacity = 0.7;
+            materialRef.current.transparent = true;
+        }
+        materialRef.current.needsUpdate = true;
+        if (lineMaterialRef.current) {
+            lineMaterialRef.current.color.set(isDark ? 0xffffff : 0x000000);
+            lineMaterialRef.current.blending = isDark
+                ? THREE.AdditiveBlending
+                : THREE.NormalBlending;
+            lineMaterialRef.current.needsUpdate = true;
+        }
+        if (textureRef.current) {
+            const canvas = document.createElement("canvas");
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext("2d")!;
+            const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+
+            gradient.addColorStop(0, isDark ? "rgba(255,255,255,1)" : "rgba(0,0,0,1)");
+            gradient.addColorStop(1, isDark ? "rgba(255,255,255,0)" : "rgba(0,0,0,0)");
+
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 64, 64);
+
+            textureRef.current.image = canvas;
+            textureRef.current.needsUpdate = true;
+        }
+    }, [theme]);
 
     return (
         <div
