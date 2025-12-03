@@ -106,7 +106,8 @@ export default function Sphere() {
         materialRef.current = material;
 
         const sphere = new THREE.Points(geometry, material);
-        sphere.scale.setScalar(1.15);
+        const scale = window.innerWidth < 640 ? 0.8 : 1.15;
+        sphere.scale.setScalar(scale);
         scene.add(sphere);
 
         const maxLineDistance = 0.07;
@@ -203,7 +204,7 @@ export default function Sphere() {
             lineMaterial = new THREE.LineBasicMaterial({
                 color: theme === "dark" ? 0xffffff : 0x000000,
                 transparent: true,
-                opacity: 0.02,        
+                opacity: 0.02,
                 depthWrite: false,
                 blending: THREE.AdditiveBlending,
                 linewidth: 0.1
@@ -259,6 +260,9 @@ export default function Sphere() {
             camera.updateProjectionMatrix();
 
             renderer.setSize(clientWidth, clientHeight);
+
+            const scale = window.innerWidth < 640 ? 1.0 : 1.15;
+            sphere.scale.setScalar(scale);
         };
         window.addEventListener("resize", handleResize);
 
@@ -546,7 +550,7 @@ export default function Sphere() {
                 inset: 0,
                 zIndex: 1,
             }}
-            className="w-full h-full scale-80 sm:scale-100"
+            className="w-full h-full"
         />
     );
 }
