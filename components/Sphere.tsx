@@ -541,13 +541,12 @@ export default function Sphere() {
         <div
             ref={mountRef}
             style={{
-                width: "100%",
-                height: "100vh",
                 overflow: "hidden",
                 position: "absolute",
                 inset: 0,
                 zIndex: 1,
             }}
+            className="w-full h-full scale-80 sm:scale-100"
         />
     );
 }
