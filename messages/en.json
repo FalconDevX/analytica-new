@@ -1,0 +1,54 @@
+{
+  "navbar": {
+    "home": "Home",
+    "about": "About",
+    "projects": "Projects",
+    "contact": "Contact"
+  },
+  "welcome": {
+    "title": "Welcome to AGH Analytica"
+  },
+  "about": {
+    "title": "About Us",
+    "description": "AGH Analytica is a newly established student organization at AGH University of Science and Technology, bringing together enthusiasts of data analysis and cutting-edge technologies. \n\n Our activities focus on innovative projects that allow members to develop their skills in satellite imagery and map analysis, stock market data analysis, image analysis and working with Large Language Models (LLMs)."
+  },
+  "projects": {
+    "title": "Projects",
+    "developersChat": {
+      "title": "Developers' Chat",
+      "description": "This project aims to create an application for developers utilizing language models. Users will be able to specify geographic parameters for a plot (such as proximity to water bodies, terrain layout, sun positioning, plot size, location, etc.), which will then be processed by a language model. \n\n Based on data from databases, maps and solar positioning, the application will ultimately return a selection of plots that meet the specified criteria."
+    },
+    "tradeAnalysis": {
+      "title": "Developers' Chat",
+      "description": "This project aims to create an application for developers utilizing language models. Users will be able to specify geographic parameters for a plot (such as proximity to water bodies, terrain layout, sun positioning, plot size, location, etc.), which will then be processed by a language model. \n\n Based on data from databases, maps and solar positioning, the application will ultimately return a selection of plots that meet the specified criteria."
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Interested in our projects? Get in touch with us using the form below:",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "send": "Send"
+    },
+    "status": {
+      "success": "Message sent!",
+      "error": "Something went wrong."
+    }
+  },
+  "footer": {
+    "copyright": "© 2025 AGH Analytica",
+    "regulations": "Regulamin"
+  },
+  "common": {
+    "alt": {
+      "logo": "logo",
+      "background": "Background",
+      "poland": "Poland",
+      "unitedKingdom": "United Kingdom",
+      "aboutUs": "About Us"
+    }
+  }
+}
+

@@ -1,0 +1,54 @@
+{
+  "navbar": {
+    "home": "Strona główna",
+    "about": "O nas",
+    "projects": "Projekty",
+    "contact": "Kontakt"
+  },
+  "welcome": {
+    "title": "Witamy w AGH Analytica"
+  },
+  "about": {
+    "title": "O nas",
+    "description": "AGH Analytica to nowo powstała organizacja studencka na Akademii Górniczo-Hutniczej, skupiająca entuzjastów analizy danych i najnowszych technologii. \n\n Nasze działania koncentrują się na innowacyjnych projektach, które pozwalają członkom rozwijać swoje umiejętności w zakresie analizy obrazów satelitarnych i map, analizy danych giełdowych, analizy obrazów oraz pracy z dużymi modelami językowymi (LLM)."
+  },
+  "projects": {
+    "title": "Projekty",
+    "developersChat": {
+      "title": "Developers' Chat",
+      "description": "Ten projekt ma na celu stworzenie aplikacji dla deweloperów wykorzystującej modele językowe. Użytkownicy będą mogli określić parametry geograficzne działki (takie jak bliskość zbiorników wodnych, układ terenu, pozycja słońca, rozmiar działki, lokalizacja itp.), które następnie zostaną przetworzone przez model językowy. \n\n Na podstawie danych z baz danych, map i pozycji słonecznej aplikacja ostatecznie zwróci wybór działek spełniających określone kryteria."
+    },
+    "tradeAnalysis": {
+      "title": "Developers' Chat",
+      "description": "Ten projekt ma na celu stworzenie aplikacji dla deweloperów wykorzystującej modele językowe. Użytkownicy będą mogli określić parametry geograficzne działki (takie jak bliskość zbiorników wodnych, układ terenu, pozycja słońca, rozmiar działki, lokalizacja itp.), które następnie zostaną przetworzone przez model językowy. \n\n Na podstawie danych z baz danych, map i pozycji słonecznej aplikacja ostatecznie zwróci wybór działek spełniających określone kryteria."
+    }
+  },
+  "contact": {
+    "title": "Skontaktuj się z nami",
+    "subtitle": "Zainteresowany naszymi projektami? Skontaktuj się z nami za pomocą poniższego formularza:",
+    "form": {
+      "name": "Imię",
+      "email": "Email",
+      "message": "Wiadomość",
+      "send": "Wyślij"
+    },
+    "status": {
+      "success": "Wiadomość wysłana!",
+      "error": "Coś poszło nie tak."
+    }
+  },
+  "footer": {
+    "copyright": "© 2025 AGH Analytica",
+    "regulations": "Regulamin"
+  },
+  "common": {
+    "alt": {
+      "logo": "logo",
+      "background": "Tło",
+      "poland": "Polska",
+      "unitedKingdom": "Wielka Brytania",
+      "aboutUs": "O nas"
+    }
+  }
+}
+
