@@ -1,14 +1,19 @@
+"use client";
 import { useEffect } from "react";
 import VanillaTilt from "vanilla-tilt";
 
-//hook do obsługi efektu tilt
 export default function useTilt() {
     useEffect(() => {
-        VanillaTilt.init(document.querySelector("[data-tilt]") as HTMLElement, {
-            //maks kat obrotu
-            max: 10,
-            glare: true,
-            "max-glare": 0.9,
-        });
+        const nodeList = document.querySelectorAll("[data-tilt]");
+
+        const elements = Array.from(nodeList) as HTMLElement[];
+
+        if (elements.length > 0) {
+            VanillaTilt.init(elements, {
+                max: 20,
+                glare: false,
+                "max-glare": 0.9,
+            });
+        }
     }, []);
 }

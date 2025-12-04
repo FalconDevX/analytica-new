@@ -32,18 +32,20 @@ const Navbar = () => {
                 <ModeToggle />
 
                 <DropdownMenu>
-                    <DropdownMenuTrigger className="rounded-xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none">
+                    <DropdownMenuTrigger asChild>
                         <Button className="sm:hidden w-10 h-10 cursor-pointer">
                             <MenuIcon className="w-4 h-4" />
                         </Button>
                     </DropdownMenuTrigger>
+
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => { window.location.href = "/" }} className="cursor-pointer">{t("home")}</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => { window.location.href = "/#about" }} className="cursor-pointer">{t("about")}</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => { window.location.href = "/#projects" }} className="cursor-pointer">{t("projects")}</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => { window.location.href = "/#contact" }} className="cursor-pointer">{t("contact")}</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => window.location.href = "/"}>{t("home")}</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => window.location.href = "/#about"}>{t("about")}</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => window.location.href = "/#projects"}>{t("projects")}</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => window.location.href = "/#contact"}>{t("contact")}</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
+
             </div>
 
 
