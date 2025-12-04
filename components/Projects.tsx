@@ -8,7 +8,7 @@ const Projects = () => {
         <div id = "projects" className="appear w-full min-h-[90vh] flex flex-col items-center justify-start scroll-mt-20">
             <h1 className="text-2xl p-6">{t("title")}</h1>
             <div className="flex flex-col md:flex-row gap-5">
-                <div className="max-w-xl">
+                <div className="max-w-xl px-5 sm:px-0">
                     <h3 className="text-black dark:text-white text-lg p-3" >{t("developersChat.title")}</h3>
                     <div className="relative inline-block p-3" data-tilt suppressHydrationWarning>
                         <img 
@@ -27,7 +27,7 @@ const Projects = () => {
 
                     <p className="text-black dark:text-white text-md p-3 whitespace-pre-line">{t("developersChat.description")}</p>
                 </div>
-                <div className="max-w-xl">
+                <div className="max-w-xl px-5 sm:px-0">
                     <h3 className="text-black dark:text-white text-lg p-3">{t("tradeAnalysis.title")}</h3>
                     <div className="relative inline-block p-3" data-tilt suppressHydrationWarning>
 
