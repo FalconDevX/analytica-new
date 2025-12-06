@@ -16,11 +16,10 @@
     "title": "Projekty",
     "developersChat": {
       "title": "Developers' Chat",
-      "description": "Ten projekt ma na celu stworzenie aplikacji dla deweloperów wykorzystującej modele językowe. Użytkownicy będą mogli określić parametry geograficzne działki (takie jak bliskość zbiorników wodnych, układ terenu, pozycja słońca, rozmiar działki, lokalizacja itp.), które następnie zostaną przetworzone przez model językowy. \n\n Na podstawie danych z baz danych, map i pozycji słonecznej aplikacja ostatecznie zwróci wybór działek spełniających określone kryteria."
-    },
+      "description": "Projekt polega na stworzeniu aplikacji dla deweloperów, która z pomocą modeli językowych analizuje opisane przez użytkownika wymagania dotyczące działki — takie jak ukształtowanie terenu, nasłonecznienie, odległość od cieków wodnych, powierzchnia czy lokalizacja. \n\n System przetwarza te dane, łącząc LLM z bazami GIS, mapami i modelami środowiskowymi, a następnie zwraca listę działek najlepiej spełniających kryteria, wraz z oceną ich przydatności inwestycyjnej." },
     "tradeAnalysis": {
-      "title": "Developers' Chat",
-      "description": "Ten projekt ma na celu stworzenie aplikacji dla deweloperów wykorzystującej modele językowe. Użytkownicy będą mogli określić parametry geograficzne działki (takie jak bliskość zbiorników wodnych, układ terenu, pozycja słońca, rozmiar działki, lokalizacja itp.), które następnie zostaną przetworzone przez model językowy. \n\n Na podstawie danych z baz danych, map i pozycji słonecznej aplikacja ostatecznie zwróci wybór działek spełniających określone kryteria."
+      "title": "Analytica Investments",
+      "description": "Projekt zakłada stworzenie aplikacji doradczej wspierającej inwestorów giełdowych poprzez analizę danych rynkowych z użyciem zaawansowanych algorytmów. \n\n W kolejnych etapach system zostanie rozszerzony o moduł sztucznej inteligencji, który będzie uczył się na podstawie historycznych i bieżących danych, a następnie samodzielnie generował rekomendacje inwestycyjne oraz podejmował decyzje w symulowanych warunkach rynkowych."
     }
   },
   "contact": {

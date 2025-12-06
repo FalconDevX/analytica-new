@@ -16,11 +16,11 @@
     "title": "Projects",
     "developersChat": {
       "title": "Developers' Chat",
-      "description": "This project aims to create an application for developers utilizing language models. Users will be able to specify geographic parameters for a plot (such as proximity to water bodies, terrain layout, sun positioning, plot size, location, etc.), which will then be processed by a language model. \n\n Based on data from databases, maps and solar positioning, the application will ultimately return a selection of plots that meet the specified criteria."
+      "description": "The project aims to build an application for real estate developers that uses language models to analyze user-defined plot requirements—such as terrain, sunlight exposure, proximity to water, size, and location. \n\n By combining LLM processing with GIS databases, maps, and environmental models, the system returns a curated list of land plots that best match the criteria, along with an assessment of their development potential."
     },
     "tradeAnalysis": {
-      "title": "Developers' Chat",
-      "description": "This project aims to create an application for developers utilizing language models. Users will be able to specify geographic parameters for a plot (such as proximity to water bodies, terrain layout, sun positioning, plot size, location, etc.), which will then be processed by a language model. \n\n Based on data from databases, maps and solar positioning, the application will ultimately return a selection of plots that meet the specified criteria."
+      "title": "Analytica Investments",
+      "description": "The project aims to develop an application that supports stock market investors by analyzing market data using advanced algorithms. \n\n In later stages, the system will be enhanced with an artificial intelligence module capable of learning from historical and real-time data, ultimately generating its own investment recommendations and making autonomous trading decisions in simulated market environments."
     }
   },
   "contact": {
