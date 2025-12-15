@@ -50,7 +50,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem enableColorScheme={false}>
+          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem enableColorScheme={false}>
             {children}
           </ThemeProvider>
         </NextIntlClientProvider>
