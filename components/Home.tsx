@@ -4,7 +4,7 @@ import Navbar from './Navbar'
 
 const Home = () => {
     return (
-        <div id ="home" className="flex flex-col">
+        <div className="flex flex-col">
             <Navbar />
             <Welcome />
             <View />

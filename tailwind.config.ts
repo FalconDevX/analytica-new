@@ -8,8 +8,19 @@ const config: Config = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}", 
     "./**/*.{js,ts,jsx,tsx,mdx}",      
   ],  
-  theme: {},
+  theme: {
+    extend: {
+      keyframes: {
+        scaleY: {
+          "0%": { transform: "scaleY(0)" },
+          "100%": { transform: "scaleY(1)" },
+        },
+      },
+    },
+  },
   plugins: [],
 };
+
+
 
 export default config;
