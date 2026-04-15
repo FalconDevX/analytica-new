@@ -12,10 +12,10 @@ export default async function Recruitment() {
 	return (
 		<section
 			id="recruitment"
-			className="appear flex w-full scroll-mt-20 flex-col items-center px-5 py-12 sm:px-0"
+			className="appear flex w-full scroll-mt-20 flex-col items-center py-12"
 			aria-labelledby="recruitment-heading"
 		>
-			<div className="grid w-full max-w-6xl gap-10 md:grid-cols-2 md:items-start md:gap-12">
+			<div className="grid w-full max-w-6xl px-4 sm:px-6 lg:px-0 gap-10 md:grid-cols-2 md:items-start md:gap-12">
 				<div className="flex flex-col gap-5">
 					<span className="w-fit rounded-full border border-emerald-600/25 bg-emerald-600/8 px-3 py-1 text-xs font-medium uppercase tracking-wide text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-400">
 						{t("badge")}

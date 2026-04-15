@@ -18,9 +18,9 @@ const Projects = () => {
 	return (
 		<div id="projects" className="appear w-full min-h-[90vh] flex flex-col items-center justify-start scroll-mt-20">
 			<h1 className="text-2xl p-6">{t("title")}</h1>
-			<div className="flex flex-col gap-5">
+			<div className="w-full max-w-6xl px-4 sm:px-6 lg:px-0 flex flex-col gap-5">
 				<motion.div 
-					className="w-full px-5 sm:px-0"
+					className="w-full"
 					initial={{ x: -100, opacity: 0 }}
 					whileInView={{ x: 0, opacity: 1 }}
 					viewport={{ once: true, amount: 0.4 }}
@@ -44,14 +44,14 @@ const Projects = () => {
 						</div>
 					</div>
 				</motion.div>
-				<motion.div className="w-full px-5 sm:px-0"
+				<motion.div className="w-full"
 					initial={{ x: 100, opacity: 0 }}
 					whileInView={{ x: 0, opacity: 1 }}
 					viewport={{ once: true, amount: 0.4 }}
 					transition={{ duration: 1, ease: "easeOut" }}
 				>
 					<div className="flex flex-col md:flex-row items-center md:items-start gap-6 w-full max-w-6xl">
-						<div className="w-full md:w-1/2">
+						<div className="order-2 md:order-1 w-full md:w-1/2">
 							<h3 className="text-black dark:text-white text-lg mb-3">{t("tradeAnalysis.title")}</h3>
 							<p className=" text-md whitespace-pre-line text-black dark:text-white">
 								{t("tradeAnalysis.description")}
@@ -62,7 +62,7 @@ const Projects = () => {
 								<GithubIcon className="h-5 w-5" />
 							</div>
 						</div>
-						<div className="w-full md:w-1/2">
+						<div className="order-1 md:order-2 w-full md:w-1/2">
 							<div className="relative w-full h-[300px] p-3">
 								<div className="h-full w-full">
 									<StockChart />
@@ -71,7 +71,7 @@ const Projects = () => {
 						</div>
 					</div>
 				</motion.div>
-				<motion.div className="w-full px-5 sm:px-0"
+				<motion.div className="w-full"
 					initial={{ x: -100, opacity: 0 }}
 					whileInView={{ x: 0, opacity: 1 }}
 					viewport={{ once: true, amount: 0.4 }}
