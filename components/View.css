@@ -8,15 +8,15 @@
       transform:  translateX(0);
     }
   }
-  
+
   .appear {
-    animation: appear ease-out forwards;
+    animation: appear ease-in-out forwards;
     animation-timeline: view();
-    animation-range: entry 0 cover 40%;
+    animation-range: entry 0% entry 100%;
   }
   .appear-footer {
-    animation: appear 0.6s ease-out forwards;
+    animation: appear ease-in-out forwards;
     animation-timeline: view();
-    animation-range: entry 0;
+    animation-range: entry 0% entry 100%;
   }
   

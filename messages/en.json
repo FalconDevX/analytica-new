@@ -3,25 +3,71 @@
     "home": "Home",
     "about": "About",
     "projects": "Projects",
+    "recruitment": "Recruitment",
     "contact": "Contact"
   },
   "welcome": {
-    "title": "Welcome to AGH Analytica"
+    "title": "Welcome to AGH Analytica",
+    "join": "Join us",
+    "viewProjects": "View projects"
   },
   "about": {
     "title": "About Us",
     "description": "AGH Analytica is a newly established student organization at AGH University of Science and Technology, bringing together enthusiasts of data analysis and cutting-edge technologies. \n\n Our activities focus on innovative projects that allow members to develop their skills in satellite imagery and map analysis, stock market data analysis, image analysis and working with Large Language Models (LLMs)."
   },
-  "projects": {
-    "title": "Projects",
-    "developersChat": {
-      "title": "Developers' Chat",
-      "description": "The project aims to build an application for real estate developers that uses language models to analyze user-defined plot requirements—such as terrain, sunlight exposure, proximity to water, size, and location. \n\n By combining LLM processing with GIS databases, maps, and environmental models, the system returns a curated list of land plots that best match the criteria, along with an assessment of their development potential."
-    },
-    "tradeAnalysis": {
-      "title": "Analytica Investments",
-      "description": "The project aims to develop an application that supports stock market investors by analyzing market data using advanced algorithms. \n\n In later stages, the system will be enhanced with an artificial intelligence module capable of learning from historical and real-time data, ultimately generating its own investment recommendations and making autonomous trading decisions in simulated market environments."
+  "aboutUs": {
+    "items": {
+      "gis": {
+        "title": "GIS",
+        "text": "We analyze geospatial datasets, GIS layers, and orthophotomaps - building intelligent systems that understand space."
+      },
+      "stock": {
+        "title": "Stock market data",
+        "text": "We model financial markets and build investment algorithms powered by artificial intelligence."
+      },
+      "llm": {
+        "title": "LLM & NLP",
+        "text": "We work with large language models - from interpreting text queries to building custom chatbots."
+      },
+      "vision": {
+        "title": "Image analysis",
+        "text": "We apply computer vision for classification, detection, and segmentation - from satellite imagery to medical data."
+      }
     }
+  },
+  "projects": {
+		"title": "Our projects",
+		"developersChat": {
+			"title": "GeoAnalytica AI",
+			"description": "An intelligent tool for finding the ideal plot for developers and private individuals. The system analyzes spatial data, including land development plans, satellite imagery, terrain features, sunlight exposure, and access to infrastructure and green areas. \n\n The user describes their requirements, and AI automatically searches and organizes the best-matching locations. Each plot has a detailed profile and an assessment of its development potential."
+		},
+		"tradeAnalysis": {
+			"title": "Analytica Invest",
+			"description": "The project aims to develop an application that supports stock market investors by analyzing market data using advanced algorithms. \n\n In later stages, the system will be enhanced with an artificial intelligence module capable of learning from historical and real-time data, ultimately generating its own investment recommendations and making autonomous trading decisions in simulated market environments."
+		},
+		"roboDog": {
+			"title": "RoboDog Rescue AI",
+			"description": "RoboDog is a new generation autonomous walking platform designed for work in extreme fire and disaster conditions. Using LiDAR and thermal imaging systems, the robot quickly locates injured individuals and maps dangerous areas, reaching places where human barriers prevent access. \n\n Thanks to artificial intelligence, the device in real-time determines evacuation routes, guiding people to safety using voice commands and light signals. As a „first responder” support system, RoboDog minimizes the risk of rescuers by taking on the most difficult tasks where life or death depends on seconds."
+		}
+	},
+  "recruitment": {
+    "badge": "Recruitment open",
+    "title_lead": "Join",
+    "title_accent": "AGH Analytica",
+    "description": "We are looking for people who want to grow in data analysis, GIS, and machine learning—through student projects, a supportive community, and access to hardware and mentors.",
+    "benefit_1": "Hands-on projects with AI and GIS",
+    "benefit_2": "Workshops on Python, ML, and data analysis",
+    "benefit_3": "Hackathons and conferences",
+    "benefit_4": "Networking with IT & Data Science",
+    "benefit_5": "Access to GPUs and compute resources",
+    "benefit_6": "Trips, meetups, and a great atmosphere",
+    "card_title": "Registration form",
+    "step_1": "Click the button below",
+    "step_2": "Fill in the short form",
+    "step_3": "Wait for our message",
+    "cta": "Open the form",
+    "privacy": "We process data in line with GDPR.",
+    "regulations_link": "Read the regulations"
   },
   "contact": {
     "title": "Contact Us",
@@ -30,7 +76,8 @@
       "name": "Name",
       "email": "Email",
       "message": "Message",
-      "send": "Send"
+      "send": "Send",
+      "sending": "Sending…"
     },
     "status": {
       "success": "Message sent!",
@@ -38,7 +85,7 @@
     }
   },
   "footer": {
-    "copyright": "© 2025 AGH Analytica",
+    "copyright": "© 2026 AGH Analytica",
     "regulations": "Regulamin"
   },
   "common": {

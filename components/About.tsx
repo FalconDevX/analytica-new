@@ -11,7 +11,7 @@ const About = () => {
 			<div className="flex flex-col md:flex-row gap-8 justify-center max-w-6xl mx-auto">
 				<div className="w-full md:w-1/2 px-5 flex flex-col md:justify-start">
 					<div className="w-full h-auto object-cover mb-10">
-						<img src="neural_network.png" className="w-full h-auto object-contain" />
+						<img src="neural_network.png" className="w-full h-[400px] object-cover" style={{ WebkitMaskImage: "linear-gradient(to top, black 20%, transparent 70%)", maskImage: "linear-gradient(to bottom, black 60%, transparent 90%)", }} />
 					</div>
 					<p className="dark:text-white text-black text-md max-w-xl whitespace-pre-line">{t("description")}</p>
 					<div

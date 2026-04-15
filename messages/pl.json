@@ -1,53 +1,100 @@
 {
-  "navbar": {
-    "home": "Strona główna",
-    "about": "O nas",
-    "projects": "Projekty",
-    "contact": "Kontakt"
-  },
-  "welcome": {
-    "title": "Witamy w AGH Analytica"
-  },
-  "about": {
-    "title": "O nas",
-    "description": "AGH Analytica to nowo powstała organizacja studencka na Akademii Górniczo-Hutniczej, skupiająca entuzjastów analizy danych i najnowszych technologii. \n\n Nasze działania koncentrują się na innowacyjnych projektach, które pozwalają członkom rozwijać swoje umiejętności w zakresie analizy obrazów satelitarnych i map, analizy danych giełdowych, analizy obrazów oraz pracy z dużymi modelami językowymi (LLM)."
-  },
-  "projects": {
-    "title": "Nasze projekty",
-    "developersChat": {
-      "title": "Developers' Chat",
-      "description": "Projekt polega na stworzeniu aplikacji dla deweloperów, która z pomocą modeli językowych analizuje opisane przez użytkownika wymagania dotyczące działki — takie jak ukształtowanie terenu, nasłonecznienie, odległość od cieków wodnych, powierzchnia czy lokalizacja. \n\n System przetwarza te dane, łącząc LLM z bazami GIS, mapami i modelami środowiskowymi, a następnie zwraca listę działek najlepiej spełniających kryteria, wraz z oceną ich przydatności inwestycyjnej." },
-    "tradeAnalysis": {
-      "title": "Analytica Investments",
-      "description": "Projekt zakłada stworzenie aplikacji doradczej wspierającej inwestorów giełdowych poprzez analizę danych rynkowych z użyciem zaawansowanych algorytmów. \n\n W kolejnych etapach system zostanie rozszerzony o moduł sztucznej inteligencji, który będzie uczył się na podstawie historycznych i bieżących danych, a następnie samodzielnie generował rekomendacje inwestycyjne oraz podejmował decyzje w symulowanych warunkach rynkowych."
-    }
-  },
-  "contact": {
-    "title": "Skontaktuj się z nami",
-    "subtitle": "Zainteresowany naszymi projektami? Skontaktuj się z nami za pomocą poniższego formularza:",
-    "form": {
-      "name": "Imię",
-      "email": "Email",
-      "message": "Wiadomość",
-      "send": "Wyślij"
-    },
-    "status": {
-      "success": "Wiadomość wysłana!",
-      "error": "Coś poszło nie tak."
-    }
-  },
-  "footer": {
-    "copyright": "© 2025 AGH Analytica",
-    "regulations": "Regulamin"
-  },
-  "common": {
-    "alt": {
-      "logo": "logo",
-      "background": "Tło",
-      "poland": "Polska",
-      "unitedKingdom": "Wielka Brytania",
-      "aboutUs": "O nas"
-    }
-  }
+	"navbar": {
+		"home": "Strona główna",
+		"about": "O nas",
+		"projects": "Projekty",
+		"recruitment": "Rekrutacja",
+		"contact": "Kontakt"
+	},
+	"welcome": {
+		"title": "Witamy w AGH Analytica",
+		"join": "Dołącz do nas",
+		"viewProjects": "Zobacz projekty"
+	},
+	"about": {
+		"title": "O nas",
+		"description": "AGH Analytica to nowo powstała organizacja studencka na Akademii Górniczo-Hutniczej, skupiająca entuzjastów analizy danych i najnowszych technologii. \n\n Nasze działania koncentrują się na innowacyjnych projektach, które pozwalają członkom rozwijać swoje umiejętności w zakresie analizy obrazów satelitarnych i map, analizy danych giełdowych, analizy obrazów oraz pracy z dużymi modelami językowymi (LLM)."
+	},
+	"aboutUs": {
+		"items": {
+			"gis": {
+				"title": "GIS",
+				"text": "Analizujemy dane geoprzestrzenne, warstwy GIS i ortofotomapy — budujemy inteligentne systemy rozumiejące przestrzeń."
+			},
+			"stock": {
+				"title": "Dane giełdowe",
+				"text": "Modelujemy rynki finansowe i tworzymy algorytmy inwestycyjne wspierane sztuczną inteligencją."
+			},
+			"llm": {
+				"title": "LLM & NLP",
+				"text": "Pracujemy z dużymi modelami językowymi - od interpretacji zapytań tekstowych po budowę własnych chatbotów."
+			},
+			"vision": {
+				"title": "Analiza obrazu",
+				"text": "Stosujemy computer vision do klasyfikacji, detekcji i segmentacji — od zdjęć satelitarnych po dane medyczne."
+			}
+		}
+	},
+	"projects": {
+		"title": "Nasze projekty",
+		"developersChat": {
+			"title": "GeoAnalytica AI",
+			"description": "Inteligentne narzędzie do wyszukiwania idealnej działki dla deweloperów i osób prywatnych. System analizuje dane przestrzenne, w tym plany zagospodarowania, zdjęcia satelitarne, ukształtowanie terenu, nasłonecznienie oraz dostęp do infrastruktury i terenów zielonych. \n\n Użytkownik opisuje swoje wymagania, a AI automatycznie wyszukuje i porządkuje najlepiej dopasowane lokalizacje. Każda działka posiada szczegółowy profil i analizę potencjału inwestycyjnego."
+		},
+		"tradeAnalysis": {
+			"title": "Analytica Invest",
+			"description": "Projekt zakłada stworzenie aplikacji doradczej wspierającej inwestorów giełdowych poprzez analizę danych rynkowych z użyciem zaawansowanych algorytmów. \n\n W kolejnych etapach system zostanie rozszerzony o moduł sztucznej inteligencji, który będzie uczył się na podstawie historycznych i bieżących danych, a następnie samodzielnie generował rekomendacje inwestycyjne oraz podejmował decyzje w symulowanych warunkach rynkowych."
+		},
+		"roboDog": {
+			"title": "RoboDog Rescue AI",
+			"description": "RoboDog to autonomiczna platforma krocząca nowej generacji, przeznaczona do pracy w ekstremalnych warunkach pożarów i katastrof. Wykorzystując systemy LiDAR oraz termowizję, robot błyskawicznie lokalizuje poszkodowanych i mapuje niebezpieczne strefy, docierając tam, gdzie bariery terenowe uniemożliwiają wejście człowieka. \n\n Dzięki sztucznej inteligencji urządzenie w czasie rzeczywistym wyznacza ścieżki ewakuacyjne, prowadząc ludzi do bezpieczeństwa za pomocą głosu i światła. Jako system typu „first responder”, RoboDog minimalizuje ryzyko ratowników, przejmując najtrudniejsze zadania tam, gdzie o życiu decydują sekundy."
+		}
+	},
+	"recruitment": {
+		"badge": "Rekrutacja otwarta",
+		"title_lead": "Dołącz do",
+		"title_accent": "AGH Analytica",
+		"description": "Szukamy osób, które chcą realnie rozwijać się w analizie danych, GIS i uczeniu maszynowym — w projektach studenckich, przy wsparciu koleżeńskiej społeczności i z dostępem do sprzętu oraz mentorów.",
+		"benefit_1": "Praca nad realnymi projektami z AI i GIS",
+		"benefit_2": "Warsztaty z Pythona, ML i analizy danych",
+		"benefit_3": "Udział w hackatonach i konferencjach",
+		"benefit_4": "Networking z branżą IT i Data Science",
+		"benefit_5": "Dostęp do GPU i infrastruktury obliczeniowej",
+		"benefit_6": "Wspólne wyjazdy, integracje i dobra atmosfera",
+		"card_title": "Formularz rejestracyjny",
+		"step_1": "Kliknij przycisk poniżej",
+		"step_2": "Wypełnij krótki formularz",
+		"step_3": "Poczekaj na wiadomość od nas",
+		"cta": "Wypełnij formularz",
+		"privacy": "Dane przetwarzamy zgodnie z RODO.",
+		"regulations_link": "Zapoznaj się z regulaminem"
+	},
+	"contact": {
+		"title": "Skontaktuj się z nami",
+		"subtitle": "Zainteresowany naszymi projektami? Skontaktuj się z nami za pomocą poniższego formularza:",
+		"form": {
+			"name": "Imię",
+			"email": "Email",
+			"message": "Wiadomość",
+			"send": "Wyślij",
+			"sending": "Wysyłanie…"
+		},
+		"status": {
+			"success": "Wiadomość wysłana!",
+			"error": "Coś poszło nie tak."
+		}
+	},
+	"footer": {
+		"copyright": "© 2026 AGH Analytica",
+		"regulations": "Regulamin"
+	},
+	"common": {
+		"alt": {
+			"logo": "logo",
+			"background": "Tło",
+			"poland": "Polska",
+			"unitedKingdom": "Wielka Brytania",
+			"aboutUs": "O nas"
+		}
+	}
 }
-

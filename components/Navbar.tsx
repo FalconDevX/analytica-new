@@ -23,13 +23,36 @@ const navLinkClassMobile = (activeSection: string, section: string) =>
 			: "text-black dark:text-white hover:bg-gray-100 dark:hover:bg-white/10"
 	}`
 
+const sections = ["home", "about", "projects", "recruitment", "contact"] as const
+type SectionId = (typeof sections)[number]
+
 const Navbar = () => {
 	const t = useTranslations("navbar")
 	const [isOpen, setIsOpen] = useState(false)
-	const [activeSection, setActiveSection] = useState("home")
+	const [activeSection, setActiveSection] = useState<SectionId>("home")
 	const [indicator, setIndicator] = useState({ left: 0, width: 0 })
 	const navShellRef = useRef<HTMLDivElement>(null)
 	const desktopNavRef = useRef<HTMLDivElement>(null)
+	const pendingSectionRef = useRef<SectionId | null>(null)
+	const sectionVisibilityRef = useRef<Record<SectionId, number>>({
+		home: 0,
+		about: 0,
+		projects: 0,
+		recruitment: 0,
+		contact: 0,
+	})
+
+	const applyActiveSection = useCallback((section: SectionId) => {
+		setActiveSection((current) => (current === section ? current : section))
+	}, [])
+
+	const selectSection = useCallback(
+		(section: SectionId) => {
+			pendingSectionRef.current = section
+			applyActiveSection(section)
+		},
+		[applyActiveSection]
+	)
 
 	const updateIndicator = useCallback(() => {
 		const shell = navShellRef.current
@@ -63,17 +86,34 @@ const Navbar = () => {
 	}, [])
 
 	useEffect(() => {
-		const sections = ["home", "about", "projects", "contact"]
-
 		const observer = new IntersectionObserver(
 			(entries) => {
 				entries.forEach((entry) => {
-					if (entry.isIntersecting) {
-						setActiveSection(entry.target.id)
-					}
+					const id = entry.target.id as SectionId
+					sectionVisibilityRef.current[id] = entry.isIntersecting ? entry.intersectionRatio : 0
 				})
+
+				const pendingSection = pendingSectionRef.current
+				if (pendingSection) {
+					const pendingVisibility = sectionVisibilityRef.current[pendingSection] ?? 0
+					if (pendingVisibility < 0.35) return
+					pendingSectionRef.current = null
+					applyActiveSection(pendingSection)
+					return
+				}
+
+				const bestSection = sections.reduce((currentBest, section) =>
+					sectionVisibilityRef.current[section] > sectionVisibilityRef.current[currentBest] ? section : currentBest
+				)
+
+				if (sectionVisibilityRef.current[bestSection] > 0) {
+					applyActiveSection(bestSection)
+				}
 			},
-			{ threshold: 0.6 }
+			{
+				threshold: [0.2, 0.35, 0.5, 0.65],
+				rootMargin: "-64px 0px -20% 0px"
+			}
 		)
 
 		sections.forEach((id) => {
@@ -82,7 +122,7 @@ const Navbar = () => {
 		})
 
 		return () => observer.disconnect()
-	}, [])
+	}, [applyActiveSection])
 	return (
 		<div ref={navShellRef} className="fixed top-0 left-0 right-0 z-50 h-16">
 			<NavbarSectionIndicator left={indicator.left} width={indicator.width} className="hidden md:block" />
@@ -104,16 +144,35 @@ const Navbar = () => {
 					<img src="/text-logo-black.png" alt="logo" className="w-auto h-10 pt-1 block dark:hidden object-cover" />
 				</div>
 				<div ref={desktopNavRef} className="relative hidden md:flex md:w-1/3 items-center justify-center gap-2">
-					<a href="#home" className={navLinkClassDesktop(activeSection, "home")}>
+					<a href="#home" className={navLinkClassDesktop(activeSection, "home")} onClick={() => selectSection("home")}>
 						{t("home")}
 					</a>
-					<a href="#about" className={navLinkClassDesktop(activeSection, "about")}>
+					<a
+						href="#about"
+						className={navLinkClassDesktop(activeSection, "about")}
+						onClick={() => selectSection("about")}
+					>
 						{t("about")}
 					</a>
-					<a href="#projects" className={navLinkClassDesktop(activeSection, "projects")}>
+					<a
+						href="#projects"
+						className={navLinkClassDesktop(activeSection, "projects")}
+						onClick={() => selectSection("projects")}
+					>
 						{t("projects")}
 					</a>
-					<a href="#contact" className={navLinkClassDesktop(activeSection, "contact")}>
+					<a
+						href="#recruitment"
+						className={navLinkClassDesktop(activeSection, "recruitment")}
+						onClick={() => selectSection("recruitment")}
+					>
+						{t("recruitment")}
+					</a>
+					<a
+						href="#contact"
+						className={navLinkClassDesktop(activeSection, "contact")}
+						onClick={() => selectSection("contact")}
+					>
 						{t("contact")}
 					</a>
 				</div>
@@ -133,25 +192,46 @@ const Navbar = () => {
 						<DropdownMenuContent align="end">
 							<DropdownMenuItem
 								className={navLinkClassMobile(activeSection, "home")}
-								onClick={() => (window.location.href = "/")}
+								onClick={() => {
+									selectSection("home")
+									window.location.href = "/"
+								}}
 							>
 								{t("home")}
 							</DropdownMenuItem>
 							<DropdownMenuItem
 								className={navLinkClassMobile(activeSection, "about")}
-								onClick={() => (window.location.href = "/#about")}
+								onClick={() => {
+									selectSection("about")
+									window.location.href = "/#about"
+								}}
 							>
 								{t("about")}
 							</DropdownMenuItem>
 							<DropdownMenuItem
 								className={navLinkClassMobile(activeSection, "projects")}
-								onClick={() => (window.location.href = "/#projects")}
+								onClick={() => {
+									selectSection("projects")
+									window.location.href = "/#projects"
+								}}
 							>
 								{t("projects")}
 							</DropdownMenuItem>
 							<DropdownMenuItem
+								className={navLinkClassMobile(activeSection, "recruitment")}
+								onClick={() => {
+									selectSection("recruitment")
+									window.location.href = "/#recruitment"
+								}}
+							>
+								{t("recruitment")}
+							</DropdownMenuItem>
+							<DropdownMenuItem
 								className={navLinkClassMobile(activeSection, "contact")}
-								onClick={() => (window.location.href = "/#contact")}
+								onClick={() => {
+									selectSection("contact")
+									window.location.href = "/#contact"
+								}}
 							>
 								{t("contact")}
 							</DropdownMenuItem>

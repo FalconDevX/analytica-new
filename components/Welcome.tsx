@@ -1,7 +1,7 @@
 "use client"
-import { useRive } from "@rive-app/react-canvas"
 import Sphere from "./Sphere"
 import { useTheme } from "next-themes"
+import { useTranslations } from "next-intl"
 import LogoRiveLight from "./LogoRiveLight"
 import LogoRiveDark from "./LogoRiveDark"
 import { Button } from "./ui/button"
@@ -9,6 +9,7 @@ import { RocketIcon, ZapIcon } from "lucide-react"
 
 const Welcome = () => {
 	const { theme } = useTheme()
+	const t = useTranslations("welcome")
 	return (
 		<div id="home" className="w-full h-screen relative overflow-hidden bg-transparent scroll-mt-20">
 			<img
@@ -56,9 +57,9 @@ const Welcome = () => {
 
 			<div className="pointer-events-auto absolute bottom-30 left-0 right-0 z-40 flex flex-row flex-wrap items-center justify-center gap-3 px-4">
 				<Button asChild variant="default" size="lg" className="min-w-42 shadow-md">
-					<a href="#about">
+					<a href="#recruitment">
 						<RocketIcon className="h-4 w-4" />
-						Dołącz do nas
+						{t("join")}
 					</a>
 				</Button>
 				<Button
@@ -69,7 +70,7 @@ const Welcome = () => {
 				>
 					<a href="#projects">
 						<ZapIcon className="h-4 w-4" />
-						Zobacz projekty
+						{t("viewProjects")}
 					</a>
 				</Button>
 			</div>
