@@ -109,7 +109,12 @@ export default function GeoSearch() {
 						exit={{ opacity: 0, transition: { duration: 0.25 } }}
 						transition={{ duration: 0.3 }}
 					>
-						<InfoCard delay={0.35} icon={<Ruler className="h-3.5 w-3.5" />} label="Powierzchnia" value="1 520 · 1 480 m²" />
+						<InfoCard
+							delay={0.35}
+							icon={<Ruler className="h-3.5 w-3.5" />}
+							label="Powierzchnia"
+							value="1 520 · 1 480 m²"
+						/>
 						<InfoCard delay={0.5} icon={<Tag className="h-3.5 w-3.5" />} label="Cena" value="312 · 298 tys. PLN" />
 						<InfoCard delay={0.65} icon={<MapPin className="h-3.5 w-3.5" />} label="Dzielnica" value="Zwierzyniec" />
 						<InfoCard delay={0.8} icon={<Route className="h-3.5 w-3.5" />} label="Dostęp" value="Droga asfaltowa" />

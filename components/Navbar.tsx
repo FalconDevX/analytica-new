@@ -17,10 +17,10 @@ const navLinkClassDesktop = (activeSection: string, section: string) =>
 	}`
 
 const navLinkClassMobile = (activeSection: string, section: string) =>
-	`inline-block px-4 py-2 rounded-lg transition-all duration-300 text-md cursor-pointer whitespace-nowrap ${
+	`w-full px-3 py-2 rounded-md transition-colors duration-200 text-sm cursor-pointer whitespace-nowrap ${
 		activeSection === section
-			? "bg-black text-white shadow-sm dark:bg-white dark:text-black"
-			: "text-black dark:text-white hover:bg-gray-100 dark:hover:bg-white/10"
+			? "bg-primary text-primary-foreground font-medium shadow-sm"
+			: "text-foreground hover:bg-accent hover:text-accent-foreground"
 	}`
 
 const sections = ["home", "about", "projects", "recruitment", "contact"] as const
@@ -138,11 +138,23 @@ const Navbar = () => {
 						}}
 						className="flex min-w-0 items-center justify-center cursor-pointer"
 					>
-						<img src="/analytica_logo1-white.png" alt="logo" className="w-10 h-10 hidden dark:block object-cover shrink-0" />
-						<img src="/text-logo-white.png" alt="logo" className="w-auto h-10 pt-1 hidden dark:sm:block object-cover shrink-0" />
+						<img
+							src="/analytica_logo1-white.png"
+							alt="logo"
+							className="w-10 h-10 hidden dark:block object-cover shrink-0"
+						/>
+						<img
+							src="/text-logo-white.png"
+							alt="logo"
+							className="w-auto h-10 pt-1 hidden dark:sm:block object-cover shrink-0"
+						/>
 
 						<img src="/analytica_logo1-black.png" alt="logo" className="w-10 h-10 dark:hidden object-cover shrink-0" />
-						<img src="/text-logo-black.png" alt="logo" className="w-auto h-10 pt-1 hidden sm:block dark:hidden object-cover shrink-0" />
+						<img
+							src="/text-logo-black.png"
+							alt="logo"
+							className="w-auto h-10 pt-1 hidden sm:block dark:hidden object-cover shrink-0"
+						/>
 					</div>
 				</div>
 				<div ref={desktopNavRef} className="relative hidden md:flex md:w-1/3 items-center justify-center gap-2">
@@ -191,7 +203,7 @@ const Navbar = () => {
 							</Button>
 						</DropdownMenuTrigger>
 
-						<DropdownMenuContent align="end">
+						<DropdownMenuContent align="end" sideOffset={8} className="min-w-44 flex flex-col gap-1 p-2">
 							<DropdownMenuItem
 								className={navLinkClassMobile(activeSection, "home")}
 								onClick={() => {

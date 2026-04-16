@@ -71,9 +71,7 @@ const AboutUs = () => {
 								</div>
 								<p
 									className={
-										item.side === "right"
-											? "text-left wrap-break-word"
-											: "text-left md:text-right wrap-break-word"
+										item.side === "right" ? "text-left wrap-break-word" : "text-left md:text-right wrap-break-word"
 									}
 								>
 									{t(item.textKey)}

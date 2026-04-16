@@ -75,7 +75,9 @@
 		"info": {
 			"title": "Bezpośredni kontakt",
 			"subtitle": "Wolisz napisać bezpośrednio albo śledzić nas w social media? Wybierz jedną z opcji poniżej.",
-			"followUs": "Obserwuj nas"
+			"followUs": "Obserwuj nas",
+			"copyEmail": "Kliknij, aby skopiować",
+			"copied": "Skopiowano"
 		},
 		"form": {
 			"name": "Imię",

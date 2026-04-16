@@ -66,70 +66,75 @@ const Contact = () => {
 				<ContactInfo />
 
 				<div className="rounded-xl border border-border bg-card p-6 shadow-sm md:p-8">
-				<form onSubmit={handleSubmit} className="flex flex-col gap-4">
-					<fieldset disabled={isSubmitting} className="flex flex-col gap-4 disabled:opacity-60">
-						<input
-							value={username}
-							onChange={(e) => setUsername(e.target.value)}
-							className={fieldClass}
-							type="text"
-							name="name"
-							autoComplete="name"
-							required
-							placeholder={t("form.name")}
-							aria-label={t("form.name")}
-						/>
-						<input
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-							className={fieldClass}
-							type="email"
-							name="email"
-							autoComplete="email"
-							required
-							placeholder={t("form.email")}
-							aria-label={t("form.email")}
-						/>
-						<textarea
-							value={message}
-							onChange={(e) => setMessage(e.target.value)}
-							className={cn(fieldClass, "min-h-28 resize-y")}
-							name="message"
-							required
-							placeholder={t("form.message")}
-							aria-label={t("form.message")}
-						/>
-					</fieldset>
-					<Button type="submit" className="mt-1 w-full cursor-pointer" disabled={isSubmitting} aria-busy={isSubmitting}>
-						{isSubmitting ? (
-							<span className="inline-flex items-center gap-2">
-								<Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-								{t("form.sending")}
-							</span>
-						) : (
-							t("form.send")
-						)}
-					</Button>
-				</form>
+					<form onSubmit={handleSubmit} className="flex flex-col gap-4">
+						<fieldset disabled={isSubmitting} className="flex flex-col gap-4 disabled:opacity-60">
+							<input
+								value={username}
+								onChange={(e) => setUsername(e.target.value)}
+								className={fieldClass}
+								type="text"
+								name="name"
+								autoComplete="name"
+								required
+								placeholder={t("form.name")}
+								aria-label={t("form.name")}
+							/>
+							<input
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
+								className={fieldClass}
+								type="email"
+								name="email"
+								autoComplete="email"
+								required
+								placeholder={t("form.email")}
+								aria-label={t("form.email")}
+							/>
+							<textarea
+								value={message}
+								onChange={(e) => setMessage(e.target.value)}
+								className={cn(fieldClass, "min-h-28 resize-y")}
+								name="message"
+								required
+								placeholder={t("form.message")}
+								aria-label={t("form.message")}
+							/>
+						</fieldset>
+						<Button
+							type="submit"
+							className="mt-1 w-full cursor-pointer"
+							disabled={isSubmitting}
+							aria-busy={isSubmitting}
+						>
+							{isSubmitting ? (
+								<span className="inline-flex items-center gap-2">
+									<Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+									{t("form.sending")}
+								</span>
+							) : (
+								t("form.send")
+							)}
+						</Button>
+					</form>
 
-				{isSubmitting && (
-					<p className="mt-4 text-center text-xs text-muted-foreground" role="status" aria-live="polite">
-						{t("form.sendingHint")}
-					</p>
-				)}
-				{status === "success" && !isSubmitting && (
-					<p
-						className="mt-4 text-balance text-center text-sm font-medium text-emerald-600 dark:text-emerald-400"
-						role="status"
-					>
-						{t("status.success")}
-					</p>
-				)}
-				{status === "error" && !isSubmitting && (
-					<p className="mt-4 text-balance text-center text-sm font-medium text-destructive" role="alert">
-						{t("status.error")}
-					</p>
-				)}
+					{isSubmitting && (
+						<p className="mt-4 text-center text-xs text-muted-foreground" role="status" aria-live="polite">
+							{t("form.sendingHint")}
+						</p>
+					)}
+					{status === "success" && !isSubmitting && (
+						<p
+							className="mt-4 text-balance text-center text-sm font-medium text-emerald-600 dark:text-emerald-400"
+							role="status"
+						>
+							{t("status.success")}
+						</p>
+					)}
+					{status === "error" && !isSubmitting && (
+						<p className="mt-4 text-balance text-center text-sm font-medium text-destructive" role="alert">
+							{t("status.error")}
+						</p>
+					)}
 				</div>
 			</div>
 		</div>
