@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server"
-import { Button } from "./ui/button"
+import { Button } from "@/components/ui/button"
 import { Check, ClipboardList, ExternalLink, FileText, Lock } from "lucide-react"
 
 const RECRUITMENT_FORM_URL =

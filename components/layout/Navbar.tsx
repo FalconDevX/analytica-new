@@ -1,11 +1,11 @@
 "use client"
 import { useTranslations } from "next-intl"
 import { useState, useEffect, useRef, useLayoutEffect, useCallback } from "react"
-import ModeToggle from "./modeToggle"
+import ModeToggle from "./ModeToggle"
 import Flags from "./Flags"
-import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuContent } from "./ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuContent } from "@/components/ui/dropdown-menu"
 import { MenuIcon } from "lucide-react"
-import { Button } from "./ui/button"
+import { Button } from "@/components/ui/button"
 import { NavbarSectionIndicator } from "./NavbarSectionIndicator"
 
 const navLinkBase =

@@ -4,7 +4,7 @@ import { useTheme } from "next-themes"
 import { useTranslations } from "next-intl"
 import LogoRiveLight from "./LogoRiveLight"
 import LogoRiveDark from "./LogoRiveDark"
-import { Button } from "./ui/button"
+import { Button } from "@/components/ui/button"
 import { RocketIcon, ZapIcon } from "lucide-react"
 
 const Welcome = () => {

@@ -1,6 +1,6 @@
 import View from "./View"
-import Welcome from "./Welcome"
-import Navbar from "./Navbar"
+import Welcome from "./welcome/Welcome"
+import Navbar from "@/components/layout/Navbar"
 
 const Home = () => {
 	return (

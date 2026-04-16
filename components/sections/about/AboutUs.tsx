@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import HorizontalReveal from "./HorizontalReveal"
+import HorizontalReveal from "@/components/common/HorizontalReveal"
 import { MapIcon, ChartBarIcon, BrainIcon, ImageIcon } from "lucide-react"
 import { motion } from "framer-motion"
 import { useTranslations } from "next-intl"

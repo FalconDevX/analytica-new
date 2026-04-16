@@ -3,7 +3,7 @@
 import React, { useState } from "react"
 import { useTranslations } from "next-intl"
 import { Loader2 } from "lucide-react"
-import { Button } from "./ui/button"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import ContactInfo from "./ContactInfo"
 
