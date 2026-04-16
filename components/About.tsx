@@ -1,17 +1,37 @@
-import React from "react"
+"use client"
 import { useTranslations } from "next-intl"
 import { Facebook, Instagram, Linkedin } from "lucide-react"
 import AboutUs from "./AboutUs"
+import { useTheme } from "next-themes"
+import { useEffect, useState } from "react"
 
 const About = () => {
 	const t = useTranslations("about")
+	const { resolvedTheme } = useTheme()
+	const [mounted, setMounted] = useState(false)
+	useEffect(() => setMounted(true), [])
+	const isLight = mounted && resolvedTheme === "light"
+
 	return (
 		<div id="about" className="appear w-full min-h-[60vh] flex flex-col items-center scroll-mt-15">
 			<h1 className="text-black dark:text-white text-2xl p-6">{t("title")}</h1>
 			<div className="flex flex-col md:flex-row gap-8 justify-center max-w-6xl mx-auto">
 				<div className="w-full md:w-1/2 px-5 flex flex-col md:justify-start">
-					<div className="w-full h-auto object-cover mb-10">
-						<img src="neural_network.png" className="w-full h-[400px] object-cover" style={{ WebkitMaskImage: "linear-gradient(to top, black 20%, transparent 70%)", maskImage: "linear-gradient(to bottom, black 60%, transparent 90%)", }} />
+					<div className="w-full h-auto object-cover mb-10" suppressHydrationWarning>
+						{mounted && (
+							<img
+								src={isLight ? "neural_network_white.png" : "neural_network.png"}
+								className="w-full h-[400px] object-cover"
+								style={{
+									WebkitMaskImage: isLight
+										? "linear-gradient(to top, white 20%, transparent 70%)"
+										: "linear-gradient(to top, black 20%, transparent 70%)",
+									maskImage: isLight
+										? "linear-gradient(to bottom, white 80%, transparent 90%)"
+										: "linear-gradient(to bottom, black 60%, transparent 90%)"
+								}}
+							/>
+						)}
 					</div>
 					<p className="dark:text-white text-black text-md max-w-xl whitespace-pre-line">{t("description")}</p>
 					<div

@@ -2,9 +2,12 @@
 import useTilt from "@/hooks/useTilt"
 import { useTranslations } from "next-intl"
 import StockChart from "./StockChart"
+import GeoSearch from "./GeoSearch"
 import { ProjectTechTags } from "./ProjectTechTags"
 import { GithubIcon } from "lucide-react"
 import { motion } from "framer-motion"
+import { useEffect, useState } from "react"
+import { useTheme } from "next-themes"
 
 const TECH_DEVELOPERS_CHAT = ["Python", "LangChain", "LLM / OpenAI", "GeoPandas", "PostGIS", "FastAPI", "React"]
 
@@ -13,13 +16,17 @@ const TECH_TRADE = ["Python", "TensorFlow", "Pandas", "yfinance", "FastAPI", "Re
 const TECH_ROBO_DOG = ["Python", "ROS 2", "PyTorch", "LiDAR", "YOLOv8", "Reinforcement Learning", "Raspberry Pi"]
 
 const Projects = () => {
+	const { resolvedTheme } = useTheme()
+	const [mounted, setMounted] = useState(false)
+	useEffect(() => setMounted(true), [])
+	const isLight = mounted && resolvedTheme === "light"
 	useTilt()
 	const t = useTranslations("projects")
 	return (
 		<div id="projects" className="appear w-full min-h-[90vh] flex flex-col items-center justify-start scroll-mt-20">
 			<h1 className="text-2xl p-6">{t("title")}</h1>
 			<div className="w-full max-w-6xl px-4 sm:px-6 lg:px-0 flex flex-col gap-5">
-				<motion.div 
+				<motion.div
 					className="w-full"
 					initial={{ x: -100, opacity: 0 }}
 					whileInView={{ x: 0, opacity: 1 }}
@@ -28,7 +35,7 @@ const Projects = () => {
 				>
 					<div className="flex flex-col md:flex-row items-center md:items-start gap-6 w-full max-w-6xl">
 						<div className="relative w-full md:w-1/2 p-3">
-							<img src="project-geo.png" className="w-full h-auto object-contain rounded-lg" />
+							<GeoSearch />
 						</div>
 
 						<div className="w-full md:w-1/2">
@@ -44,7 +51,8 @@ const Projects = () => {
 						</div>
 					</div>
 				</motion.div>
-				<motion.div className="w-full"
+				<motion.div
+					className="w-full"
 					initial={{ x: 100, opacity: 0 }}
 					whileInView={{ x: 0, opacity: 1 }}
 					viewport={{ once: true, amount: 0.4 }}
@@ -71,7 +79,8 @@ const Projects = () => {
 						</div>
 					</div>
 				</motion.div>
-				<motion.div className="w-full"
+				<motion.div
+					className="w-full"
 					initial={{ x: -100, opacity: 0 }}
 					whileInView={{ x: 0, opacity: 1 }}
 					viewport={{ once: true, amount: 0.4 }}
@@ -81,7 +90,11 @@ const Projects = () => {
 						<div className="w-full md:w-1/2">
 							<div className="relative w-full h-[300px] p-3">
 								<div className="h-full w-full overflow-hidden rounded-lg">
-									<img src="unitree_go2.png" alt="" className="h-full w-full object-cover object-center" />
+									<img
+										src={isLight ? "unitree_go2_white.png" : "unitree_go2.png"}
+										alt=""
+										className="h-full w-full object-cover object-center"
+									/>
 								</div>
 							</div>
 						</div>
