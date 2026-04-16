@@ -39,7 +39,7 @@ const Navbar = () => {
 		about: 0,
 		projects: 0,
 		recruitment: 0,
-		contact: 0,
+		contact: 0
 	})
 
 	const applyActiveSection = useCallback((section: SectionId) => {
@@ -131,17 +131,19 @@ const Navbar = () => {
 				aria-hidden
 			/>
 			<div className="relative z-10 flex h-full w-full items-center justify-center gap-8 sm:gap-4">
-				<div
-					onClick={() => {
-						window.location.href = "/"
-					}}
-					className="flex w-full md:w-1/3 flex-row pl-3 md:pl-10"
-				>
-					<img src="/analytica_logo1-white.png" alt="logo" className="w-10 h-10 hidden dark:block object-cover" />
-					<img src="/text-logo-white.png" alt="logo" className="w-auto h-10 pt-1 hidden dark:block object-cover" />
+				<div className="flex w-full md:w-1/3 flex-row pl-3 md:pl-10">
+					<div
+						onClick={() => {
+							window.location.href = "/"
+						}}
+						className="flex items-center justify-center cursor-pointer"
+					>
+						<img src="/analytica_logo1-white.png" alt="logo" className="w-10 h-10 hidden dark:block object-cover" />
+						<img src="/text-logo-white.png" alt="logo" className="w-auto h-10 pt-1 hidden dark:block object-cover" />
 
-					<img src="/analytica_logo1-black.png" alt="logo" className="w-10 h-10 dark:hidden object-cover" />
-					<img src="/text-logo-black.png" alt="logo" className="w-auto h-10 pt-1 block dark:hidden object-cover" />
+						<img src="/analytica_logo1-black.png" alt="logo" className="w-10 h-10 dark:hidden object-cover" />
+						<img src="/text-logo-black.png" alt="logo" className="w-auto h-10 pt-1 block dark:hidden object-cover" />
+					</div>
 				</div>
 				<div ref={desktopNavRef} className="relative hidden md:flex md:w-1/3 items-center justify-center gap-2">
 					<a href="#home" className={navLinkClassDesktop(activeSection, "home")} onClick={() => selectSection("home")}>
