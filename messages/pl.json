@@ -72,16 +72,22 @@
 	"contact": {
 		"title": "Skontaktuj się z nami",
 		"subtitle": "Zainteresowany naszymi projektami? Skontaktuj się z nami za pomocą poniższego formularza:",
+		"info": {
+			"title": "Bezpośredni kontakt",
+			"subtitle": "Wolisz napisać bezpośrednio albo śledzić nas w social media? Wybierz jedną z opcji poniżej.",
+			"followUs": "Obserwuj nas"
+		},
 		"form": {
 			"name": "Imię",
 			"email": "Email",
 			"message": "Wiadomość",
 			"send": "Wyślij",
-			"sending": "Wysyłanie…"
+			"sending": "Wysyłanie…",
+			"sendingHint": "To może zająć kilka sekund — nie zamykaj okna."
 		},
 		"status": {
-			"success": "Wiadomość wysłana!",
-			"error": "Coś poszło nie tak."
+			"success": "Wiadomość wysłana! Odpowiemy w ciągu 24 godzin. Potwierdzenie wysłaliśmy na Twój email.",
+			"error": "Coś poszło nie tak. Spróbuj ponownie za chwilę."
 		}
 	},
 	"footer": {

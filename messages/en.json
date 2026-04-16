@@ -72,16 +72,22 @@
   "contact": {
     "title": "Contact Us",
     "subtitle": "Interested in our projects? Get in touch with us using the form below:",
+    "info": {
+      "title": "Direct contact",
+      "subtitle": "Prefer to write directly or follow us on social media? Pick one of the options below.",
+      "followUs": "Follow us"
+    },
     "form": {
       "name": "Name",
       "email": "Email",
       "message": "Message",
       "send": "Send",
-      "sending": "Sending…"
+      "sending": "Sending…",
+      "sendingHint": "This may take a few seconds — please don't close the window."
     },
     "status": {
-      "success": "Message sent!",
-      "error": "Something went wrong."
+      "success": "Message sent! We'll reply within 24 hours. A confirmation has been sent to your email.",
+      "error": "Something went wrong. Please try again in a moment."
     }
   },
   "footer": {
