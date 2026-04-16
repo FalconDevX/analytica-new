@@ -3,6 +3,12 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+html,
+body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
 body {
   font-family: Fira Code, sans-serif;
 }

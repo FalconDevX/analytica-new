@@ -52,7 +52,7 @@ export default async function Recruitment() {
 						</div>
 					</div>
 					<h3 className="text-center text-lg font-semibold text-card-foreground">{t("card_title")}</h3>
-					<div className="mt-6 grid grid-cols-3 gap-3 text-center">
+					<div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-3 text-center">
 						{[1, 2, 3].map((step) => (
 							<div key={step} className="flex flex-col items-center gap-2">
 								<div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">

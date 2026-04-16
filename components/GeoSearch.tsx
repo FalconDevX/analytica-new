@@ -103,7 +103,7 @@ export default function GeoSearch() {
 				{showResults && (
 					<motion.div
 						key="results"
-						className="pointer-events-none absolute inset-y-0 right-0 z-500 flex w-[48%] flex-col justify-center gap-2 px-3"
+						className="pointer-events-none absolute inset-y-0 right-0 z-500 flex w-[62%] sm:w-[48%] flex-col justify-center gap-1.5 sm:gap-2 px-2 sm:px-3"
 						initial={{ opacity: 0 }}
 						animate={{ opacity: 1 }}
 						exit={{ opacity: 0, transition: { duration: 0.25 } }}
@@ -133,10 +133,10 @@ export default function GeoSearch() {
 				)}
 			</AnimatePresence>
 
-			<div className="pointer-events-none absolute bottom-2 left-3 z-500 font-mono text-[9px] uppercase tracking-wider text-amber-700/70 dark:text-amber-300/60">
+			<div className="pointer-events-none absolute bottom-2 left-3 z-500 font-mono text-[10px] sm:text-[9px] uppercase tracking-wider text-amber-700/70 dark:text-amber-300/60">
 				PostGIS · GeoPandas · LLM
 			</div>
-			<div className="pointer-events-none absolute bottom-2 right-3 z-500 font-mono text-[8px] text-zinc-500 dark:text-zinc-500">
+			<div className="pointer-events-none hidden sm:block absolute bottom-2 right-3 z-500 font-mono text-[8px] text-zinc-500 dark:text-zinc-500">
 				© OpenStreetMap · CARTO
 			</div>
 		</div>
@@ -163,8 +163,8 @@ function InfoCard({ icon, label, value, delay }: InfoCardProps) {
 				{icon}
 			</div>
 			<div className="flex min-w-0 flex-col">
-				<span className="text-[9px] uppercase tracking-wider text-zinc-500 dark:text-zinc-400">{label}</span>
-				<span className="truncate text-xs font-medium text-zinc-900 dark:text-zinc-100">{value}</span>
+				<span className="text-[10px] uppercase tracking-wider text-zinc-500 dark:text-zinc-400">{label}</span>
+				<span className="truncate text-[11px] sm:text-xs font-medium text-zinc-900 dark:text-zinc-100">{value}</span>
 			</div>
 		</motion.div>
 	)

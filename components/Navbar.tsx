@@ -130,19 +130,19 @@ const Navbar = () => {
 				className="pointer-events-none absolute inset-0 z-1 bg-white/30 backdrop-blur-lg dark:bg-black/30"
 				aria-hidden
 			/>
-			<div className="relative z-10 flex h-full w-full items-center justify-center gap-8 sm:gap-4">
-				<div className="flex w-full md:w-1/3 flex-row pl-3 md:pl-10">
+			<div className="relative z-10 flex h-full w-full items-center justify-center gap-2 sm:gap-4 md:gap-8">
+				<div className="flex min-w-0 flex-1 md:w-1/3 flex-row pl-3 md:pl-10">
 					<div
 						onClick={() => {
 							window.location.href = "/"
 						}}
-						className="flex items-center justify-center cursor-pointer"
+						className="flex min-w-0 items-center justify-center cursor-pointer"
 					>
-						<img src="/analytica_logo1-white.png" alt="logo" className="w-10 h-10 hidden dark:block object-cover" />
-						<img src="/text-logo-white.png" alt="logo" className="w-auto h-10 pt-1 hidden dark:block object-cover" />
+						<img src="/analytica_logo1-white.png" alt="logo" className="w-10 h-10 hidden dark:block object-cover shrink-0" />
+						<img src="/text-logo-white.png" alt="logo" className="w-auto h-10 pt-1 hidden dark:sm:block object-cover shrink-0" />
 
-						<img src="/analytica_logo1-black.png" alt="logo" className="w-10 h-10 dark:hidden object-cover" />
-						<img src="/text-logo-black.png" alt="logo" className="w-auto h-10 pt-1 block dark:hidden object-cover" />
+						<img src="/analytica_logo1-black.png" alt="logo" className="w-10 h-10 dark:hidden object-cover shrink-0" />
+						<img src="/text-logo-black.png" alt="logo" className="w-auto h-10 pt-1 hidden sm:block dark:hidden object-cover shrink-0" />
 					</div>
 				</div>
 				<div ref={desktopNavRef} className="relative hidden md:flex md:w-1/3 items-center justify-center gap-2">
@@ -179,14 +179,14 @@ const Navbar = () => {
 					</a>
 				</div>
 
-				<div className="flex w-full cursor-default flex-row items-center justify-end gap-4 pr-3 md:pr-10 md:w-1/3">
+				<div className="flex cursor-default flex-row items-center justify-end gap-2 sm:gap-3 md:gap-4 pr-3 md:pr-10 md:w-1/3 shrink-0">
 					<Flags />
 
 					<ModeToggle />
 
 					<DropdownMenu modal={false} open={isOpen} onOpenChange={setIsOpen}>
 						<DropdownMenuTrigger asChild>
-							<Button className="md:hidden w-10 h-10 cursor-pointer">
+							<Button className="md:hidden min-h-11 min-w-11 cursor-pointer">
 								<MenuIcon className="w-4 h-4" />
 							</Button>
 						</DropdownMenuTrigger>

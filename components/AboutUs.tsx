@@ -42,9 +42,9 @@ const AboutUs = () => {
 
 	return (
 		<div className="h-full flex flex-col items-center relative">
-			<div className="relative w-full max-w-4xl flex flex-col">
+			<div className="relative w-full max-w-4xl flex flex-col gap-6 md:gap-0">
 				<motion.div
-					className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[2px] bg-neutral-400/50 origin-top"
+					className="hidden md:block absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[2px] bg-neutral-400/50 origin-top"
 					initial={{ scaleY: 0 }}
 					whileInView={{ scaleY: 1 }}
 					viewport={{ once: true, amount: 0.4 }}
@@ -53,15 +53,15 @@ const AboutUs = () => {
 				{items.map((item, i) => (
 					<div
 						key={i}
-						className={`w-full min-h-[130px] flex ${item.side === "right" ? "justify-end" : "justify-start"}`}
+						className={`w-full md:min-h-[130px] flex ${item.side === "right" ? "md:justify-end" : "md:justify-start"}`}
 					>
-						<div className="w-1/2 mx-[-30px]">
+						<div className="w-full md:w-1/2 md:mx-[-30px]">
 							<HorizontalReveal delay={item.delay} direction={item.side === "right" ? "right" : "left"}>
 								<div
 									className={
 										item.side === "right"
-											? "flex justify-start items-center gap-2 mb-4"
-											: "flex justify-end items-center gap-2 mb-4"
+											? "flex items-center gap-2 mb-2 md:mb-4 md:justify-start"
+											: "flex items-center gap-2 mb-2 md:mb-4 md:justify-end"
 									}
 								>
 									<h2 className="text-lg font-bold">{t(item.titleKey)}</h2>
@@ -69,7 +69,15 @@ const AboutUs = () => {
 										{item.icon}
 									</div>
 								</div>
-								<p className={item.side === "right" ? "text-left" : "text-right"}>{t(item.textKey)}</p>
+								<p
+									className={
+										item.side === "right"
+											? "text-left wrap-break-word"
+											: "text-left md:text-right wrap-break-word"
+									}
+								>
+									{t(item.textKey)}
+								</p>
 							</HorizontalReveal>
 						</div>
 					</div>

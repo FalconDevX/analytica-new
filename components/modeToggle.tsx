@@ -16,8 +16,10 @@ export default function ModeToggle() {
 
 	return (
 		<button
+			type="button"
+			aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
 			onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-			className="w-10 h-10 flex items-center justify-center border border-black dark:border-gray-700 rounded-md hover:bg-gray-100 dark:hover:bg-gray-950 transition cursor-pointer"
+			className="w-11 h-11 flex items-center justify-center border border-black dark:border-gray-700 rounded-md hover:bg-gray-100 dark:hover:bg-gray-950 transition cursor-pointer"
 		>
 			{theme === "dark" ? <Sun className="flex w-5 h-5 text-white" /> : <Moon className="flex w-5 h-5 text-black" />}
 		</button>

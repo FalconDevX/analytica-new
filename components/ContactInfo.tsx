@@ -43,10 +43,10 @@ const ContactInfo = () => {
 
 			<a
 				href={`mailto:${EMAIL}`}
-				className="mt-4 inline-flex items-center gap-3 rounded-md border border-border bg-background px-4 py-3 text-sm font-medium text-foreground transition-colors hover:border-ring hover:bg-accent"
+				className="mt-4 inline-flex min-h-11 items-center gap-3 rounded-md border border-border bg-background px-4 py-3 text-sm font-medium text-foreground transition-colors hover:border-ring hover:bg-accent"
 			>
 				<Mail className="h-4 w-4 shrink-0" aria-hidden="true" />
-				<span className="truncate">{EMAIL}</span>
+				<span className="break-all">{EMAIL}</span>
 			</a>
 
 			<div className="mt-4">
@@ -62,7 +62,7 @@ const ContactInfo = () => {
 								rel="noopener noreferrer"
 								aria-label={name}
 								className={cn(
-									"inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-background text-foreground transition-colors duration-300",
+									"inline-flex h-11 w-11 items-center justify-center rounded-md border border-border bg-background text-foreground transition-colors duration-300",
 									hoverClass
 								)}
 							>
