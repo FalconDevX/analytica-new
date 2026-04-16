@@ -132,3 +132,37 @@ html {
     @apply bg-background text-foreground;
   }
 }
+
+/* ---------------------------------------------------------------
+   Force mobile layout when embedded via ?device=mobile.
+   Overrides md:/lg:/xl: breakpoints used in the main page sections
+   so the site renders like a phone even when the iframe is wide.
+--------------------------------------------------------------- */
+html.device-mobile #about > div,
+html.device-mobile #projects .flex.flex-col.md\:flex-row,
+html.device-mobile #recruitment > div,
+html.device-mobile #contact .grid {
+  flex-direction: column !important;
+  grid-template-columns: 1fr !important;
+}
+
+html.device-mobile #about > div > div,
+html.device-mobile #projects .flex.flex-col.md\:flex-row > div,
+html.device-mobile #recruitment > div > div,
+html.device-mobile #contact .grid > div {
+  width: 100% !important;
+}
+
+html.device-mobile .md\:order-1,
+html.device-mobile .md\:order-2 {
+  order: 0 !important;
+}
+
+html.device-mobile .sm\:flex-row {
+  flex-direction: column !important;
+}
+
+html.device-mobile .sm\:grid-cols-3 {
+  grid-template-columns: 1fr !important;
+}
+

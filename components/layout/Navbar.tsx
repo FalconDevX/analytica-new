@@ -7,6 +7,8 @@ import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuConten
 import { MenuIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { NavbarSectionIndicator } from "./NavbarSectionIndicator"
+import { useDevice } from "@/hooks/useDevice"
+import { cn } from "@/lib/utils"
 
 const navLinkBase =
 	"relative inline-block px-4 py-2 rounded-lg transition-all duration-300 text-md cursor-pointer whitespace-nowrap hover:bg-gray-100 dark:hover:bg-white/10"
@@ -28,6 +30,7 @@ type SectionId = (typeof sections)[number]
 
 const Navbar = () => {
 	const t = useTranslations("navbar")
+	const { isForcedMobile } = useDevice()
 	const [isOpen, setIsOpen] = useState(false)
 	const [activeSection, setActiveSection] = useState<SectionId>("home")
 	const [indicator, setIndicator] = useState({ left: 0, width: 0 })
@@ -125,7 +128,11 @@ const Navbar = () => {
 	}, [applyActiveSection])
 	return (
 		<div ref={navShellRef} className="fixed top-0 left-0 right-0 z-50 h-16">
-			<NavbarSectionIndicator left={indicator.left} width={indicator.width} className="hidden md:block" />
+			<NavbarSectionIndicator
+				left={indicator.left}
+				width={indicator.width}
+				className={cn("hidden md:block", isForcedMobile && "md:hidden")}
+			/>
 			<div
 				className="pointer-events-none absolute inset-0 z-1 bg-white/30 backdrop-blur-lg dark:bg-black/30"
 				aria-hidden
@@ -157,7 +164,13 @@ const Navbar = () => {
 						/>
 					</div>
 				</div>
-				<div ref={desktopNavRef} className="relative hidden md:flex md:w-1/3 items-center justify-center gap-2">
+				<div
+					ref={desktopNavRef}
+					className={cn(
+						"relative hidden md:flex md:w-1/3 items-center justify-center gap-2",
+						isForcedMobile && "md:hidden"
+					)}
+				>
 					<a href="#home" className={navLinkClassDesktop(activeSection, "home")} onClick={() => selectSection("home")}>
 						{t("home")}
 					</a>
@@ -198,7 +211,9 @@ const Navbar = () => {
 
 					<DropdownMenu modal={false} open={isOpen} onOpenChange={setIsOpen}>
 						<DropdownMenuTrigger asChild>
-							<Button className="md:hidden min-h-11 min-w-11 cursor-pointer">
+							<Button
+								className={cn("md:hidden min-h-11 min-w-11 cursor-pointer", isForcedMobile && "md:inline-flex")}
+							>
 								<MenuIcon className="w-4 h-4" />
 							</Button>
 						</DropdownMenuTrigger>

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { ThemeProvider } from "next-themes"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages, getLocale } from "next-intl/server"
+import { DeviceProvider } from "@/hooks/useDevice"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -47,6 +48,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     document.documentElement.classList.remove('dark');
                   }
                 } catch (_) {}
+                try {
+                  var device = new URLSearchParams(window.location.search).get('device');
+                  if (device === 'mobile') document.documentElement.classList.add('device-mobile');
+                  if (device === 'desktop') document.documentElement.classList.add('device-desktop');
+                } catch (_) {}
               })();
             `
 					}}
@@ -59,7 +65,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
 				<NextIntlClientProvider locale={locale} messages={messages}>
 					<ThemeProvider attribute="class" defaultTheme="dark" enableSystem enableColorScheme={false}>
-						{children}
+						<DeviceProvider>{children}</DeviceProvider>
 					</ThemeProvider>
 				</NextIntlClientProvider>
 			</body>
