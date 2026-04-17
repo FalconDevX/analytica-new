@@ -79,7 +79,7 @@ const Navbar = () => {
 
 	useEffect(() => {
 		const handleResize = () => {
-			if (window.innerWidth >= 640) {
+			if (window.innerWidth >= 1024) {
 				setIsOpen(false)
 			}
 		}
@@ -131,14 +131,14 @@ const Navbar = () => {
 			<NavbarSectionIndicator
 				left={indicator.left}
 				width={indicator.width}
-				className={cn("hidden md:block", isForcedMobile && "md:hidden")}
+				className={cn("hidden lg:block", isForcedMobile && "lg:hidden")}
 			/>
 			<div
 				className="pointer-events-none absolute inset-0 z-1 bg-white/30 backdrop-blur-lg dark:bg-black/30"
 				aria-hidden
 			/>
-			<div className="relative z-10 flex h-full w-full items-center justify-center gap-2 sm:gap-4 md:gap-8">
-				<div className="flex min-w-0 flex-1 md:w-1/3 flex-row pl-3 md:pl-10">
+			<div className="relative z-10 flex h-full w-full items-center justify-center gap-2 sm:gap-4 lg:gap-8">
+				<div className="flex min-w-0 flex-1 lg:w-1/3 flex-row pl-3 lg:pl-10">
 					<div
 						onClick={() => {
 							window.location.href = "/"
@@ -167,8 +167,8 @@ const Navbar = () => {
 				<div
 					ref={desktopNavRef}
 					className={cn(
-						"relative hidden md:flex md:w-1/3 items-center justify-center gap-2",
-						isForcedMobile && "md:hidden"
+						"relative hidden lg:flex lg:w-1/3 items-center justify-center gap-2",
+						isForcedMobile && "lg:hidden"
 					)}
 				>
 					<a href="#home" className={navLinkClassDesktop(activeSection, "home")} onClick={() => selectSection("home")}>
@@ -204,7 +204,7 @@ const Navbar = () => {
 					</a>
 				</div>
 
-				<div className="flex cursor-default flex-row items-center justify-end gap-2 sm:gap-3 md:gap-4 pr-3 md:pr-10 md:w-1/3 shrink-0">
+				<div className="flex cursor-default flex-row items-center justify-end gap-2 sm:gap-3 lg:gap-4 pr-3 lg:pr-10 lg:w-1/3 shrink-0">
 					<Flags />
 
 					<ModeToggle />
@@ -212,7 +212,7 @@ const Navbar = () => {
 					<DropdownMenu modal={false} open={isOpen} onOpenChange={setIsOpen}>
 						<DropdownMenuTrigger asChild>
 							<Button
-								className={cn("md:hidden min-h-11 min-w-11 cursor-pointer", isForcedMobile && "md:inline-flex")}
+								className={cn("lg:hidden min-h-11 min-w-11 cursor-pointer", isForcedMobile && "lg:inline-flex")}
 							>
 								<MenuIcon className="w-4 h-4" />
 							</Button>
