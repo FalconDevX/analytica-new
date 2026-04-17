@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Check, ClipboardList, ExternalLink, FileText, Lock } from "lucide-react"
 
 const RECRUITMENT_FORM_URL =
-	"https://forms.office.com/pages/responsepage.aspx?id=PwOxgOAhgkq7wPBf3M07yB8HzU5gEPdPonFPkvWv1hJUMTM3R1QzVFI2SzNVMEhTNTJPUjZTSEdLTS4u&route=shorturl"
+	"https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=PwOxgOAhgkq7wPBf3M07yKN2FW9c_0hApvWNPMpdg_1UOExMMUZRUVAwT01NSTI2SUwyUTRBSjJURS4u"
 
 export default async function Recruitment() {
 	const t = await getTranslations("recruitment")

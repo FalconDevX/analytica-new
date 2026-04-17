@@ -93,12 +93,16 @@ export const metadata: Metadata = {
 	},
 	icons: {
 		icon: [
-			{ url: "/analytica_logo1-black.png", media: "(prefers-color-scheme: light)" },
-			{ url: "/analytica_logo1-white.png", media: "(prefers-color-scheme: dark)" }
+			{ url: "/favicons/favicon.ico", sizes: "any" },
+			{ url: "/favicons/favicon.svg", type: "image/svg+xml" },
+			{ url: "/favicons/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+			{ url: "/favicons/web-app-manifest-192x192.png", sizes: "192x192", type: "image/png" },
+			{ url: "/favicons/web-app-manifest-512x512.png", sizes: "512x512", type: "image/png" }
 		],
-		shortcut: "/analytica_logo1-black.png",
-		apple: "/analytica_logo1-black.png"
-	}
+		shortcut: "/favicons/favicon.ico",
+		apple: "/favicons/apple-touch-icon.png"
+	},
+	manifest: "/favicons/site.webmanifest"
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
