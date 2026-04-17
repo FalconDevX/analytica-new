@@ -54,7 +54,7 @@ const Welcome = () => {
 
 			{/* Rive.app logo */}
 			<div className="absolute inset-0 m-auto z-30 flex items-center justify-center pointer-events-none sm:pr-9 [@media(max-height:500px)]:hidden">
-				<div className="w-60 sm:w-72 md:w-80 lg:w-[350px] aspect-square">
+				<div className="w-44 sm:w-72 md:w-80 lg:w-[350px] aspect-square">
 					{!isLoading && (theme === "light" ? <LogoRiveDark /> : <LogoRiveLight />)}
 				</div>
 			</div>
