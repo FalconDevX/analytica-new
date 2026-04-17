@@ -18,6 +18,7 @@ export default function HorizontalReveal({ children, delay = 0, direction = "rig
 	return (
 		<motion.div
 			ref={ref}
+			className="horizontal-reveal"
 			initial={{ opacity: 0, scale: 0.85, y: 0, x: direction === "right" ? -100 : 100 }}
 			animate={
 				isInView

@@ -9,6 +9,13 @@ body {
   max-width: 100%;
 }
 
+@media (max-width: 767px) {
+  .horizontal-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
 body {
   font-family: Fira Code, sans-serif;
 }
