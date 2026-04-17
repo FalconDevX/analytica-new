@@ -15,6 +15,14 @@
     "title": "About Us",
     "description": "AGH Analytica is a newly established student organization at AGH University of Science and Technology, bringing together enthusiasts of data analysis and cutting-edge technologies. \n\n Our activities focus on innovative projects that allow members to develop their skills in satellite imagery and map analysis, stock market data analysis, image analysis and working with Large Language Models (LLMs)."
   },
+  "aboutStats": {
+    "members": "Members",
+    "fields": "Fields of study",
+    "faculties": "Faculties",
+    "events": "Events organized",
+    "projects": "Active projects",
+    "grants": "Grants received"
+  },
   "aboutUs": {
     "items": {
       "gis": {

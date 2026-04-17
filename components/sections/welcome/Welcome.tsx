@@ -6,10 +6,12 @@ import LogoRiveLight from "./LogoRiveLight"
 import LogoRiveDark from "./LogoRiveDark"
 import { Button } from "@/components/ui/button"
 import { RocketIcon, ZapIcon } from "lucide-react"
+import { useLoading } from "@/components/LoadingProvider"
 
 const Welcome = () => {
 	const { theme } = useTheme()
 	const t = useTranslations("welcome")
+	const { isLoading } = useLoading()
 	return (
 		<div id="home" className="w-full h-screen relative overflow-hidden bg-transparent scroll-mt-20">
 			<img
@@ -53,7 +55,7 @@ const Welcome = () => {
 			{/* Rive.app logo */}
 			<div className="absolute inset-0 m-auto z-30 flex items-center justify-center pointer-events-none sm:pr-9 [@media(max-height:500px)]:hidden">
 				<div className="w-60 sm:w-72 md:w-80 lg:w-[350px] aspect-square">
-					{theme === "light" ? <LogoRiveDark /> : <LogoRiveLight />}
+					{!isLoading && (theme === "light" ? <LogoRiveDark /> : <LogoRiveLight />)}
 				</div>
 			</div>
 

@@ -2,6 +2,7 @@
 import { useTranslations } from "next-intl"
 import { Facebook, Instagram, Linkedin } from "lucide-react"
 import AboutUs from "./AboutUs"
+import StatsCounter from "./StatsCounter"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 
@@ -14,26 +15,25 @@ const About = () => {
 
 	return (
 		<div id="about" className="appear w-full min-h-[60vh] flex flex-col items-center scroll-mt-20">
-			<h1 className="text-black dark:text-white text-2xl p-6">{t("title")}</h1>
+			<h1 className="text-black dark:text-white text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight py-6 px-6 text-center">
+				{t("title")}
+			</h1>
 			<div className="flex flex-col md:flex-row gap-8 justify-center max-w-6xl mx-auto">
 				<div className="w-full md:w-1/2 px-5 flex flex-col md:justify-start">
-					<div className="w-full h-auto object-cover mb-6 md:mb-10" suppressHydrationWarning>
+					<div className="w-full h-auto object-cover mb-4" suppressHydrationWarning>
 						{mounted && (
 							<img
-								src={isLight ? "neural_network_white.png" : "neural_network.png"}
-								className="w-full h-[220px] sm:h-[300px] md:h-[400px] object-cover"
+								src={isLight ? "neural_network_white.png" : "neural_network2.png"}
+								className="w-full h-[260px] sm:h-[300px] md:h-[400px] object-contain"
 								style={{
-									WebkitMaskImage: isLight
-										? "linear-gradient(to top, white 20%, transparent 70%)"
-										: "linear-gradient(to top, black 20%, transparent 70%)",
-									maskImage: isLight
-										? "linear-gradient(to bottom, white 80%, transparent 90%)"
-										: "linear-gradient(to bottom, black 60%, transparent 90%)"
+									WebkitMaskImage: "linear-gradient(to bottom, black 70%, transparent 100%)",
+									maskImage: "linear-gradient(to bottom, black 70%, transparent 100%)"
 								}}
 							/>
 						)}
 					</div>
-					<p className="dark:text-white text-black text-md max-w-xl whitespace-pre-line">{t("description")}</p>
+					<StatsCounter />
+					<p className="dark:text-white text-black text-md max-w-xl whitespace-pre-line mt-2">{t("description")}</p>
 					<div
 						className="mt-5 flex w-fit max-w-full flex-row flex-wrap items-center gap-1 self-start rounded-xl border border-zinc-200 bg-zinc-50/90 px-2 py-2 dark:border-zinc-600 dark:bg-zinc-900/40"
 						role="group"
