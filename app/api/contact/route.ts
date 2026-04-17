@@ -89,7 +89,7 @@ export async function POST(req: Request) {
                     </div>
                     <hr style="border:none;border-top:1px solid #eee;margin:20px 0">
                     <p style="font-size:12px;color:#888;margin:0">
-                        To wiadomość wygenerowana automatycznie — prosimy na nią nie odpowiadać.
+                        To wiadomość wygenerowana automatycznie - prosimy na nią nie odpowiadać.
                         Jeśli chcesz uzupełnić zgłoszenie, napisz bezpośrednio na
                         <a href="mailto:${recipient}" style="color:#555">${recipient}</a>.
                     </p>

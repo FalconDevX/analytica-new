@@ -5,7 +5,6 @@ import StockChart from "./StockChart"
 import GeoSearch from "./GeoSearch"
 import { ProjectTechTags } from "./ProjectTechTags"
 import { GithubIcon } from "lucide-react"
-import { motion } from "framer-motion"
 import dynamic from "next/dynamic"
 import type { ReactNode } from "react"
 
@@ -41,17 +40,11 @@ const ProjectCard = ({
 	direction = "left",
 	githubUrl
 }: ProjectCardProps) => {
-	const initialX = direction === "left" ? -100 : 100
+	const slideClass = direction === "left" ? "project-slide-left" : "project-slide-right"
 
 	return (
-		<motion.article
-			className="w-full"
-			initial={{ x: initialX, opacity: 0 }}
-			whileInView={{ x: 0, opacity: 1 }}
-			viewport={{ once: true, amount: 0.3 }}
-			transition={{ duration: 0.9, ease: "easeOut" }}
-		>
-			<div className="group relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-sm shadow-sm transition-all duration-300 hover:shadow-lg hover:border-border/80">
+		<article className={`w-full ${slideClass}`}>
+			<div className="group relative overflow-hidden rounded-2xl border border-border bg-card/60 md:backdrop-blur-sm shadow-sm md:transition-all md:duration-300 md:hover:shadow-lg md:hover:border-border/80">
 				<div className="flex flex-col md:flex-row gap-6 md:gap-8 p-4 sm:p-6 md:p-8">
 					<div
 						className={`w-full md:w-1/2 ${mediaOnLeft ? "md:order-1" : "md:order-2"}`}
@@ -87,7 +80,7 @@ const ProjectCard = ({
 					</div>
 				</div>
 			</div>
-		</motion.article>
+		</article>
 	)
 }
 

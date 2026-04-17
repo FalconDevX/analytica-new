@@ -8,6 +8,7 @@ import { ToneMappingMode, BlendFunction } from "postprocessing"
 import { ACESFilmicToneMapping, Vector3 } from "three"
 import type { Object3D, Mesh, DirectionalLight } from "three"
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib"
+import useIsMobile from "@/hooks/useIsMobile"
 
 const MODEL_URL = "/robot_dog_unitree_go2.glb"
 
@@ -92,6 +93,7 @@ export default function RoboDogViewer() {
 	const sunRef = useRef<DirectionalLight | null>(null)
 	const [isInteracting, setIsInteracting] = useState(false)
 	const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+	const isMobile = useIsMobile()
 
 	const clearIdleTimer = () => {
 		if (idleTimerRef.current) {
@@ -114,27 +116,28 @@ export default function RoboDogViewer() {
 
 	return (
 		<Canvas
-			shadows
-			dpr={[1, 2]}
+			shadows={!isMobile}
+			dpr={isMobile ? 1 : [1, 2]}
 			camera={{ position: [0.57, 0.34, 0.68], fov: 42 }}
 			gl={{
-				antialias: true,
+				antialias: !isMobile,
 				alpha: true,
+				powerPreference: isMobile ? "low-power" : "high-performance",
 				toneMapping: ACESFilmicToneMapping,
 				toneMappingExposure: 1.0
 			}}
 			style={{ background: "transparent" }}
 		>
-			<ambientLight intensity={0.15} />
+			<ambientLight intensity={isMobile ? 0.35 : 0.15} />
 
 			<directionalLight
 				ref={sunRef}
 				position={[4, 5, 3]}
 				intensity={2.2}
 				color="#d8e6ff"
-				castShadow
-				shadow-mapSize-width={2048}
-				shadow-mapSize-height={2048}
+				castShadow={!isMobile}
+				shadow-mapSize-width={isMobile ? 512 : 2048}
+				shadow-mapSize-height={isMobile ? 512 : 2048}
 				shadow-bias={-0.0001}
 				shadow-camera-near={0.1}
 				shadow-camera-far={20}
@@ -144,7 +147,9 @@ export default function RoboDogViewer() {
 				shadow-camera-bottom={-4}
 			/>
 
-			<CameraFollowSun lightRef={sunRef} offset={[2.5, 3.5, 2]} target={[0, -0.3, 0]} />
+			{!isMobile && (
+				<CameraFollowSun lightRef={sunRef} offset={[2.5, 3.5, 2]} target={[0, -0.3, 0]} />
+			)}
 
 			<directionalLight position={[-3.5, 2.5, 2]} intensity={0.35} color="#9bb8ff" />
 
@@ -154,15 +159,17 @@ export default function RoboDogViewer() {
 				<Center disableY={false} position={[0, -0.3, 0]}>
 					<RoboDogModel />
 				</Center>
-				<Environment preset="night" environmentIntensity={0.4} />
+				{!isMobile && <Environment preset="night" environmentIntensity={0.4} />}
 			</Suspense>
 
-			<EffectComposer multisampling={4}>
-				<Bloom intensity={0.45} luminanceThreshold={0.75} luminanceSmoothing={0.25} mipmapBlur />
-				<BrightnessContrast brightness={0.04} contrast={0.12} />
-				<ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-				<Vignette offset={0.3} darkness={0.35} blendFunction={BlendFunction.NORMAL} />
-			</EffectComposer>
+			{!isMobile && (
+				<EffectComposer multisampling={4}>
+					<Bloom intensity={0.45} luminanceThreshold={0.75} luminanceSmoothing={0.25} mipmapBlur />
+					<BrightnessContrast brightness={0.04} contrast={0.12} />
+					<ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
+					<Vignette offset={0.3} darkness={0.35} blendFunction={BlendFunction.NORMAL} />
+				</EffectComposer>
+			)}
 
 			<OrbitControls
 				ref={controlsRef}
