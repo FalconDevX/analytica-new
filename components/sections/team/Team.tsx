@@ -100,10 +100,9 @@ function MemberAvatar({
 					"relative shrink-0 overflow-hidden rounded-full transition-shadow duration-300",
 					styles.avatar,
 					highlight
-						? "ring-2 ring-emerald-600/70 ring-offset-2 ring-offset-background dark:ring-emerald-500/60"
-						: "ring-2 ring-border ring-offset-2 ring-offset-background",
-					!showImage && "border-2 border-dashed border-muted-foreground/35 bg-muted",
-					"group-hover:shadow-[0_0_18px_rgba(0,0,0,0.22)] dark:group-hover:shadow-[0_0_22px_rgba(255,255,255,0.15)]"
+						? "ring-2 ring-amber-500 ring-offset-2 ring-offset-background dark:ring-amber-400/90 group-hover:shadow-[0_0_20px_rgba(245,158,11,0.35)]"
+						: "ring-2 ring-border ring-offset-2 ring-offset-background group-hover:shadow-[0_0_18px_rgba(0,0,0,0.22)] dark:group-hover:shadow-[0_0_22px_rgba(255,255,255,0.15)]",
+					!showImage && "border-2 border-dashed border-muted-foreground/35 bg-muted"
 				)}
 				whileHover={prefersReducedMotion ? undefined : { scale: 1.04 }}
 				transition={{ type: "spring", stiffness: 320, damping: 20 }}
