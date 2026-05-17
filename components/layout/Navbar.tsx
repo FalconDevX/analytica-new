@@ -25,7 +25,7 @@ const navLinkClassMobile = (activeSection: string, section: string) =>
 			: "text-foreground hover:bg-accent hover:text-accent-foreground"
 	}`
 
-const sections = ["home", "about", "projects", "recruitment", "contact"] as const
+const sections = ["home", "about", "team", "projects", "recruitment", "contact"] as const
 type SectionId = (typeof sections)[number]
 
 const Navbar = () => {
@@ -40,6 +40,7 @@ const Navbar = () => {
 	const sectionVisibilityRef = useRef<Record<SectionId, number>>({
 		home: 0,
 		about: 0,
+		team: 0,
 		projects: 0,
 		recruitment: 0,
 		contact: 0
@@ -182,6 +183,13 @@ const Navbar = () => {
 						{t("about")}
 					</a>
 					<a
+						href="#team"
+						className={navLinkClassDesktop(activeSection, "team")}
+						onClick={() => selectSection("team")}
+					>
+						{t("team")}
+					</a>
+					<a
 						href="#projects"
 						className={navLinkClassDesktop(activeSection, "projects")}
 						onClick={() => selectSection("projects")}
@@ -236,6 +244,15 @@ const Navbar = () => {
 								}}
 							>
 								{t("about")}
+							</DropdownMenuItem>
+							<DropdownMenuItem
+								className={navLinkClassMobile(activeSection, "team")}
+								onClick={() => {
+									selectSection("team")
+									window.location.href = "/#team"
+								}}
+							>
+								{t("team")}
 							</DropdownMenuItem>
 							<DropdownMenuItem
 								className={navLinkClassMobile(activeSection, "projects")}

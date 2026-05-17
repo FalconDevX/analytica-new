@@ -2,6 +2,7 @@
   "navbar": {
     "home": "Home",
     "about": "About",
+    "team": "Board",
     "projects": "Projects",
     "recruitment": "Recruitment",
     "contact": "Contact"
@@ -58,6 +59,27 @@
 			"description": "RoboDog is a new generation autonomous walking platform designed for work in extreme fire and disaster conditions. Using LiDAR and thermal imaging systems, the robot quickly locates injured individuals and maps dangerous areas, reaching places where human barriers prevent access. \n\n Thanks to artificial intelligence, the device in real-time determines evacuation routes, guiding people to safety using voice commands and light signals. As a „first responder” support system, RoboDog minimizes the risk of rescuers by taking on the most difficult tasks where life or death depends on seconds."
 		}
 	},
+  "team": {
+    "title": "Current board",
+    "groups": {
+      "supervisors": "Club supervisors",
+      "leadership": "Board",
+      "team": "Marketing & organizational affairs"
+    },
+    "members": {
+      "opiekun_zietek": { "name": "dr Sławomir Ziętek", "role": "Club supervisor" },
+      "opiekun_grochot": { "name": "dr Krzysztof Grochot", "role": "Club supervisor" },
+      "prezes": { "name": "Norbert Jarzmik", "role": "President" },
+      "wiceprezes": { "name": "Łukasz Musiał", "role": "Vice President" },
+      "sekretarz": { "name": "Wojciech Kocemba", "role": "Secretary" },
+      "skarbnik": { "name": "Jonathan Kostrzewa-Seyoum", "role": "Treasurer" },
+      "czlonek_4": { "name": "Piotr Bugiel", "role": "Board member" },
+      "koordynator_anna": { "name": "Anna Nowosadzka", "role": "Organizational coordinator" },
+      "koordynator_olga": { "name": "Olga Erhenfeld", "role": "Organizational coordinator" },
+      "marketing_karolina": { "name": "Karolina Florek", "role": "Marketing" },
+      "marketing_paulina": { "name": "Paulina Kamińska", "role": "Marketing" }
+    }
+  },
   "recruitment": {
     "badge": "Recruitment open",
     "title_lead": "Join",

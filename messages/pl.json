@@ -2,6 +2,7 @@
 	"navbar": {
 		"home": "Strona główna",
 		"about": "O nas",
+		"team": "Zarząd",
 		"projects": "Projekty",
 		"recruitment": "Rekrutacja",
 		"contact": "Kontakt"
@@ -56,6 +57,27 @@
 		"roboDog": {
 			"title": "RoboDog Rescue AI",
 			"description": "RoboDog to autonomiczna platforma krocząca nowej generacji, przeznaczona do pracy w ekstremalnych warunkach pożarów i katastrof. Wykorzystując systemy LiDAR oraz termowizję, robot błyskawicznie lokalizuje poszkodowanych i mapuje niebezpieczne strefy, docierając tam, gdzie bariery terenowe uniemożliwiają wejście człowieka. \n\n Dzięki sztucznej inteligencji urządzenie w czasie rzeczywistym wyznacza ścieżki ewakuacyjne, prowadząc ludzi do bezpieczeństwa za pomocą głosu i światła. Jako system typu „first responder”, RoboDog minimalizuje ryzyko ratowników, przejmując najtrudniejsze zadania tam, gdzie o życiu decydują sekundy."
+		}
+	},
+	"team": {
+		"title": "Aktualny zarząd koła",
+		"groups": {
+			"supervisors": "Opiekunowie koła",
+			"leadership": "Zarząd",
+			"team": "Dział marketingu i spraw organizacyjnych"
+		},
+		"members": {
+			"opiekun_zietek": { "name": "dr Sławomir Ziętek", "role": "Opiekun koła" },
+			"opiekun_grochot": { "name": "dr Krzysztof Grochot", "role": "Opiekun koła" },
+			"prezes": { "name": "Norbert Jarzmik", "role": "Prezes" },
+			"wiceprezes": { "name": "Łukasz Musiał", "role": "Wiceprezes" },
+			"sekretarz": { "name": "Wojciech Kocemba", "role": "Sekretarz" },
+			"skarbnik": { "name": "Jonathan Kostrzewa-Seyoum", "role": "Skarbnik" },
+			"czlonek_4": { "name": "Piotr Bugiel", "role": "Członek zarządu" },
+			"koordynator_anna": { "name": "Anna Nowosadzka", "role": "Koordynator ds. organizacyjnych" },
+			"koordynator_olga": { "name": "Olga Erhenfeld", "role": "Koordynator ds. organizacyjnych" },
+			"marketing_karolina": { "name": "Karolina Florek", "role": "Marketing" },
+			"marketing_paulina": { "name": "Paulina Kamińska", "role": "Marketing" }
 		}
 	},
 	"recruitment": {

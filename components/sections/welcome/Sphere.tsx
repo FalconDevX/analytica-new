@@ -13,6 +13,8 @@ export default function Sphere() {
 	useEffect(() => {
 		if (!mountRef.current) return
 
+		const isMobile = typeof window !== "undefined" && window.innerWidth < 768
+
 		const scene = new THREE.Scene()
 		scene.background = null
 		const camera = new THREE.PerspectiveCamera(
@@ -24,16 +26,17 @@ export default function Sphere() {
 		camera.position.z = 3
 
 		const renderer = new THREE.WebGLRenderer({
-			antialias: true,
-			alpha: true
+			antialias: !isMobile,
+			alpha: true,
+			powerPreference: isMobile ? "low-power" : "high-performance"
 		})
 		renderer.setClearColor(theme === "dark" ? 0x000000 : 0xffffff, 0)
 		renderer.domElement.style.background = "transparent"
 		renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight)
 		mountRef.current.appendChild(renderer.domElement)
-		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+		renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2))
 
-		const N = 20000
+		const N = isMobile ? 4000 : 20000
 		const points = []
 		const offset = 2 / N
 		const increment = Math.PI * (3 - Math.sqrt(5))
@@ -106,9 +109,9 @@ export default function Sphere() {
 
 		const maxLineDistance = 0.07
 		const maxLineDistanceSq = maxLineDistance * maxLineDistance
-		const maxConnectionsPerPoint = 5
-		const maxSegments = 100000
-		const linePointsCount = 30000
+		const maxConnectionsPerPoint = isMobile ? 2 : 5
+		const maxSegments = isMobile ? 0 : 100000
+		const linePointsCount = isMobile ? 0 : 30000
 
 		const neighborPairs: number[] = []
 		const connectionsCount = new Uint16Array(N)
