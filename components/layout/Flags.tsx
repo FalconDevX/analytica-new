@@ -1,20 +1,15 @@
 "use client"
 
-import { useRouter } from "next/navigation"
+import { useAppLocale } from "@/components/providers/LocaleProvider"
 
 export default function Flags() {
-	const router = useRouter()
-
-	function setLang(locale: "pl" | "en") {
-		document.cookie = `NEXT_LOCALE=${locale}; path=/;`
-		router.refresh()
-	}
+	const { setLocale } = useAppLocale()
 
 	return (
 		<div className="flex gap-1">
 			<button
 				type="button"
-				onClick={() => setLang("pl")}
+				onClick={() => setLocale("pl")}
 				aria-label="Polski"
 				className="inline-flex h-11 w-11 items-center justify-center rounded-md transition-colors hover:bg-accent cursor-pointer"
 			>
@@ -22,7 +17,7 @@ export default function Flags() {
 			</button>
 			<button
 				type="button"
-				onClick={() => setLang("en")}
+				onClick={() => setLocale("en")}
 				aria-label="English"
 				className="inline-flex h-11 w-11 items-center justify-center rounded-md transition-colors hover:bg-accent cursor-pointer"
 			>

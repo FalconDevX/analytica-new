@@ -1,12 +1,14 @@
-import { getTranslations } from "next-intl/server"
+"use client"
+
+import { useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
 import { Check, ClipboardList, ExternalLink, FileText, Lock } from "lucide-react"
 
 const RECRUITMENT_FORM_URL =
 	"https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=PwOxgOAhgkq7wPBf3M07yKN2FW9c_0hApvWNPMpdg_1UOExMMUZRUVAwT01NSTI2SUwyUTRBSjJURS4u"
 
-export default async function Recruitment() {
-	const t = await getTranslations("recruitment")
+export default function Recruitment() {
+	const t = useTranslations("recruitment")
 	const benefits = [1, 2, 3, 4, 5, 6].map((n) => t(`benefit_${n}`))
 
 	return (

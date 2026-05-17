@@ -1,8 +1,8 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { ThemeProvider } from "next-themes"
-import { NextIntlClientProvider } from "next-intl"
 import { getMessages, getLocale } from "next-intl/server"
+import { LocaleProvider } from "@/components/providers/LocaleProvider"
 import { DeviceProvider } from "@/hooks/useDevice"
 import LoadingScreen from "@/components/LoadingScreen"
 import { LoadingProvider } from "@/components/LoadingProvider"
@@ -184,14 +184,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 				/>
 			</head>
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-				<NextIntlClientProvider locale={locale} messages={messages}>
+				<LocaleProvider initialLocale={locale} initialMessages={messages}>
 					<ThemeProvider attribute="class" defaultTheme="dark" enableSystem enableColorScheme={false}>
 						<LoadingProvider>
 							<LoadingScreen />
 							<DeviceProvider>{children}</DeviceProvider>
 						</LoadingProvider>
 					</ThemeProvider>
-				</NextIntlClientProvider>
+				</LocaleProvider>
 			</body>
 		</html>
 	)
