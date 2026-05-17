@@ -41,9 +41,7 @@ const TEAM_LAYOUT: TeamGroupConfig[] = [
 		groupId: "team",
 		members: [
 			{ id: "koordynator_anna", image: "/team/AnnaNowosadzka.png" },
-			{ id: "koordynator_olga", image: "/team/OlgaEhrenfeld.png" },
-			{ id: "marketing_karolina" },
-			{ id: "marketing_paulina" }
+			{ id: "koordynator_olga", image: "/team/OlgaEhrenfeld.png" }
 		]
 	}
 ]
@@ -158,7 +156,7 @@ function MemberGrid({
 			? "grid-cols-2 max-w-md mx-auto gap-8"
 			: groupId === "leadership"
 				? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8 sm:gap-6"
-				: "grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6"
+				: "grid-cols-2 max-w-md mx-auto gap-8 sm:gap-10"
 
 	return (
 		<motion.ul

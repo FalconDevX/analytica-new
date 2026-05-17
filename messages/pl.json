@@ -64,7 +64,7 @@
 		"groups": {
 			"supervisors": "Opiekunowie koła",
 			"leadership": "Zarząd",
-			"team": "Dział marketingu i spraw organizacyjnych"
+			"team": "Dział spraw organizacyjnych"
 		},
 		"members": {
 			"opiekun_zietek": { "name": "dr Sławomir Ziętek", "role": "Opiekun koła" },
@@ -75,9 +75,7 @@
 			"skarbnik": { "name": "Jonathan Kostrzewa-Seyoum", "role": "Skarbnik" },
 			"czlonek_4": { "name": "Piotr Bugiel", "role": "Członek zarządu" },
 			"koordynator_anna": { "name": "Anna Nowosadzka", "role": "Koordynator ds. organizacyjnych" },
-			"koordynator_olga": { "name": "Olga Erhenfeld", "role": "Koordynator ds. organizacyjnych" },
-			"marketing_karolina": { "name": "Karolina Florek", "role": "Marketing" },
-			"marketing_paulina": { "name": "Paulina Kamińska", "role": "Marketing" }
+			"koordynator_olga": { "name": "Olga Erhenfeld", "role": "Koordynator ds. organizacyjnych" }
 		}
 	},
 	"recruitment": {

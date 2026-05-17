@@ -64,7 +64,7 @@
     "groups": {
       "supervisors": "Club supervisors",
       "leadership": "Board",
-      "team": "Marketing & organizational affairs"
+      "team": "Organizational affairs"
     },
     "members": {
       "opiekun_zietek": { "name": "dr Sławomir Ziętek", "role": "Club supervisor" },
@@ -75,9 +75,7 @@
       "skarbnik": { "name": "Jonathan Kostrzewa-Seyoum", "role": "Treasurer" },
       "czlonek_4": { "name": "Piotr Bugiel", "role": "Board member" },
       "koordynator_anna": { "name": "Anna Nowosadzka", "role": "Organizational coordinator" },
-      "koordynator_olga": { "name": "Olga Erhenfeld", "role": "Organizational coordinator" },
-      "marketing_karolina": { "name": "Karolina Florek", "role": "Marketing" },
-      "marketing_paulina": { "name": "Paulina Kamińska", "role": "Marketing" }
+      "koordynator_olga": { "name": "Olga Erhenfeld", "role": "Organizational coordinator" }
     }
   },
   "recruitment": {
