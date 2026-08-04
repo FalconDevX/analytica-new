@@ -21,12 +21,12 @@ const geistMono = Geist_Mono({
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://analytica.agh.edu.pl"
 
 const SITE_DESCRIPTION =
-	"AGH Analytica – koło naukowe AGH w Krakowie zajmujące się analizą danych, GIS, uczeniem maszynowym i LLM. Realizujemy projekty z computer vision, analizy rynków finansowych i robotyki (RoboDog). Dołącz do rekrutacji."
+	"Studenckie koło naukowe AGH rozwijające projekty z obszaru AI, analizy danych, GIS, computer vision i robotyki."
 
 export const metadata: Metadata = {
 	metadataBase: new URL(SITE_URL),
 	title: {
-		default: "AGH Analytica – Koło Naukowe Analizy Danych",
+		default: "AGH Analytica — AI, Data Science i GIS",
 		template: "%s | AGH Analytica"
 	},
 	description: SITE_DESCRIPTION,
@@ -74,20 +74,20 @@ export const metadata: Metadata = {
 		alternateLocale: ["en_US"],
 		url: SITE_URL,
 		siteName: "AGH Analytica",
-		title: "AGH Analytica – Koło Naukowe Analizy Danych",
+		title: "AGH Analytica — AI, Data Science i GIS",
 		description: SITE_DESCRIPTION,
 		images: [
 			{
 				url: "/analytica_logo1-black.png",
 				width: 1200,
 				height: 1200,
-				alt: "AGH Analytica – logo koła naukowego"
+				alt: "AGH Analytica — koło naukowe AI, Data Science i GIS"
 			}
 		]
 	},
 	twitter: {
 		card: "summary_large_image",
-		title: "AGH Analytica – Koło Naukowe Analizy Danych",
+		title: "AGH Analytica — AI, Data Science i GIS",
 		description: SITE_DESCRIPTION,
 		images: ["/analytica_logo1-black.png"]
 	},
