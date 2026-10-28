@@ -103,11 +103,9 @@
 		"members": {
 			"opiekun_zietek": { "name": "dr Sławomir Ziętek", "role": "Opiekun koła" },
 			"opiekun_grochot": { "name": "dr Krzysztof Grochot", "role": "Opiekun koła" },
-			"prezes": { "name": "Norbert Jarzmik", "role": "Prezes" },
+			"prezes": { "name": "Dominik Majchrowicz", "role": "Prezes" },
 			"wiceprezes": { "name": "Łukasz Musiał", "role": "Wiceprezes" },
-			"sekretarz": { "name": "Wojciech Kocemba", "role": "Sekretarz" },
-			"skarbnik": { "name": "Jonathan Kostrzewa-Seyoum", "role": "Skarbnik" },
-			"czlonek_4": { "name": "Piotr Bugiel", "role": "Członek zarządu" },
+			"sekretarz": { "name": "Norbert Jarzmik", "role": "Sekretarz" },
 			"koordynator_anna": { "name": "Anna Nowosadzka", "role": "Koordynator ds. organizacyjnych" },
 			"koordynator_olga": { "name": "Olga Ehrenfeld", "role": "Koordynator ds. organizacyjnych" }
 		}

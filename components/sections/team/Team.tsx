@@ -30,11 +30,9 @@ const TEAM_LAYOUT: TeamGroupConfig[] = [
 	{
 		groupId: "leadership",
 		members: [
-			{ id: "prezes", image: "/team/NorbertJarzmik.webp", size: "lead" },
+			{ id: "prezes", size: "lead" },
 			{ id: "wiceprezes", image: "/team/%C5%81ukaszMusia%C5%82.webp", size: "lead" },
-			{ id: "sekretarz", image: "/team/WojciechKocemba.webp", size: "lead" },
-			{ id: "skarbnik", size: "lead" },
-			{ id: "czlonek_4", image: "/team/PiotrBugiel.webp", size: "lead" }
+			{ id: "sekretarz", image: "/team/NorbertJarzmik.webp", size: "lead" }
 		]
 	},
 	{
@@ -156,7 +154,7 @@ function MemberGrid({
 		groupId === "supervisors"
 			? "grid-cols-2 max-w-md mx-auto gap-8"
 			: groupId === "leadership"
-				? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8 sm:gap-6"
+				? "grid-cols-2 sm:grid-cols-3 max-w-2xl mx-auto gap-8 sm:gap-10 max-sm:[&>li:last-child:nth-child(odd)]:col-span-2"
 				: "grid-cols-2 max-w-md mx-auto gap-8 sm:gap-10"
 
 	return (

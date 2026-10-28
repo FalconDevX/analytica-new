@@ -103,11 +103,9 @@
     "members": {
       "opiekun_zietek": { "name": "dr Sławomir Ziętek", "role": "Club supervisor" },
       "opiekun_grochot": { "name": "dr Krzysztof Grochot", "role": "Club supervisor" },
-      "prezes": { "name": "Norbert Jarzmik", "role": "President" },
+      "prezes": { "name": "Dominik Majchrowicz", "role": "President" },
       "wiceprezes": { "name": "Łukasz Musiał", "role": "Vice President" },
-      "sekretarz": { "name": "Wojciech Kocemba", "role": "Secretary" },
-      "skarbnik": { "name": "Jonathan Kostrzewa-Seyoum", "role": "Treasurer" },
-      "czlonek_4": { "name": "Piotr Bugiel", "role": "Board member" },
+      "sekretarz": { "name": "Norbert Jarzmik", "role": "Secretary" },
       "koordynator_anna": { "name": "Anna Nowosadzka", "role": "Organizational coordinator" },
       "koordynator_olga": { "name": "Olga Ehrenfeld", "role": "Organizational coordinator" }
     }
