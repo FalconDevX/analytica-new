@@ -8,10 +8,13 @@ export default function Sphere() {
 	const materialRef = useRef<THREE.PointsMaterial | null>(null)
 	const lineMaterialRef = useRef<THREE.LineBasicMaterial | null>(null)
 	const textureRef = useRef<THREE.CanvasTexture | null>(null)
-	const { theme } = useTheme()
+	const { resolvedTheme } = useTheme()
+	const theme = resolvedTheme ?? "dark"
 
 	useEffect(() => {
-		if (!mountRef.current) return
+		const mount = mountRef.current
+		if (!mount) return
+		let frameId = 0
 
 		const isMobile = typeof window !== "undefined" && window.innerWidth < 768
 
@@ -19,7 +22,7 @@ export default function Sphere() {
 		scene.background = null
 		const camera = new THREE.PerspectiveCamera(
 			75,
-			mountRef.current.clientWidth / mountRef.current.clientHeight,
+			mount.clientWidth / mount.clientHeight,
 			0.1,
 			1000
 		)
@@ -32,8 +35,8 @@ export default function Sphere() {
 		})
 		renderer.setClearColor(theme === "dark" ? 0x000000 : 0xffffff, 0)
 		renderer.domElement.style.background = "transparent"
-		renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight)
-		mountRef.current.appendChild(renderer.domElement)
+		renderer.setSize(mount.clientWidth, mount.clientHeight)
+		mount.appendChild(renderer.domElement)
 		renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2))
 
 		const N = isMobile ? 4000 : 20000
@@ -226,9 +229,9 @@ export default function Sphere() {
 		}
 
 		const handleMouseMove = (event: MouseEvent) => {
-			if (!isHovering || !mountRef.current) return
+			if (!isHovering || !mount) return
 
-			const rect = mountRef.current.getBoundingClientRect()
+			const rect = mount.getBoundingClientRect()
 
 			mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
 			mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
@@ -238,15 +241,15 @@ export default function Sphere() {
 			mouseWorld.copy(raycaster.ray.origin).add(raycaster.ray.direction.multiplyScalar(distance))
 		}
 
-		if (mountRef.current) {
-			mountRef.current.addEventListener("mouseenter", handleMouseEnter)
-			mountRef.current.addEventListener("mouseleave", handleMouseLeave)
-			mountRef.current.addEventListener("mousemove", handleMouseMove)
+		if (mount) {
+			mount.addEventListener("mouseenter", handleMouseEnter)
+			mount.addEventListener("mouseleave", handleMouseLeave)
+			mount.addEventListener("mousemove", handleMouseMove)
 		}
 
 		const handleResize = () => {
-			if (!mountRef.current) return
-			const { clientWidth, clientHeight } = mountRef.current
+			if (!mount) return
+			const { clientWidth, clientHeight } = mount
 
 			camera.aspect = clientWidth / clientHeight
 			camera.updateProjectionMatrix()
@@ -258,6 +261,7 @@ export default function Sphere() {
 		}
 		window.addEventListener("resize", handleResize)
 
+		const pointWorld = new THREE.Vector3()
 		const oscAmplitude = 0.015
 		const oscSpeed = 1.5
 
@@ -293,7 +297,7 @@ export default function Sphere() {
 				}
 
 				renderer.render(scene, camera)
-				requestAnimationFrame(animate)
+				schedule()
 				return
 			}
 
@@ -363,7 +367,7 @@ export default function Sphere() {
 
 				positions.needsUpdate = true
 				renderer.render(scene, camera)
-				requestAnimationFrame(animate)
+				schedule()
 				return
 			}
 
@@ -386,7 +390,7 @@ export default function Sphere() {
 				const oscTargetY = baseY + ny * osc
 				const oscTargetZ = baseZ + nz * osc
 
-				const pointWorld = new THREE.Vector3(currentX, currentY, currentZ)
+				pointWorld.set(currentX, currentY, currentZ)
 				pointWorld.applyMatrix4(worldMatrix)
 
 				const dx = mouseWorld.x - pointWorld.x
@@ -455,18 +459,29 @@ export default function Sphere() {
 
 			positions.needsUpdate = true
 			renderer.render(scene, camera)
-			requestAnimationFrame(animate)
+			schedule()
 		}
+
+		// Render only while the hero is on screen (and not hidden by CSS); resume when it comes back.
+		let isVisible = true
+		function schedule() {
+			frameId = isVisible ? requestAnimationFrame(animate) : 0
+		}
+		const visibilityObserver = new IntersectionObserver(([entry]) => {
+			isVisible = entry.isIntersecting
+			if (isVisible && !frameId) frameId = requestAnimationFrame(animate)
+		})
+		visibilityObserver.observe(mount)
 
 		animate()
 		return () => {
-			if (mountRef.current) {
-				mountRef.current.removeEventListener("mouseenter", handleMouseEnter)
-				mountRef.current.removeEventListener("mouseleave", handleMouseLeave)
-				mountRef.current.removeEventListener("mousemove", handleMouseMove)
-				if (renderer.domElement.parentElement === mountRef.current) {
-					mountRef.current.removeChild(renderer.domElement)
-				}
+			cancelAnimationFrame(frameId)
+			visibilityObserver.disconnect()
+			mount.removeEventListener("mouseenter", handleMouseEnter)
+			mount.removeEventListener("mouseleave", handleMouseLeave)
+			mount.removeEventListener("mousemove", handleMouseMove)
+			if (renderer.domElement.parentElement === mount) {
+				mount.removeChild(renderer.domElement)
 			}
 			window.removeEventListener("resize", handleResize)
 			renderer.dispose()
@@ -476,6 +491,8 @@ export default function Sphere() {
 			if (lineMaterialRef.current) lineMaterialRef.current.dispose()
 			if (textureRef.current) textureRef.current.dispose()
 		}
+		// Built once; theme changes are applied by the effect below without recreating the scene.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	useEffect(() => {

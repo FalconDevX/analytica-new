@@ -1,5 +1,5 @@
 "use client"
-import Sphere from "./Sphere"
+import dynamic from "next/dynamic"
 import { useTheme } from "next-themes"
 import { useTranslations } from "next-intl"
 import LogoRiveLight from "./LogoRiveLight"
@@ -8,21 +8,20 @@ import { Button } from "@/components/ui/button"
 import { RocketIcon, ZapIcon } from "lucide-react"
 import { useLoading } from "@/components/LoadingProvider"
 
+// three.js (~700 KB) stays out of the initial bundle.
+const Sphere = dynamic(() => import("./Sphere"), { ssr: false })
+
 const Welcome = () => {
-	const { theme } = useTheme()
+	const { resolvedTheme } = useTheme()
 	const t = useTranslations("welcome")
 	const { isLoading } = useLoading()
 	return (
-		<div id="home" className="w-full h-screen relative overflow-hidden bg-transparent scroll-mt-20">
-			<img
-				src="/background.png"
-				alt="Background"
-				className="w-full h-full absolute inset-0 object-cover z-0 pointer-events-none hidden dark:block [@media(max-height:500px)]:dark:hidden"
-			/>
-			<img
-				src="/background-white.png"
-				alt="Background"
-				className="w-full h-full absolute inset-0 object-cover z-0 pointer-events-none dark:hidden [@media(max-height:500px)]:hidden"
+		<div id="home" className="w-full h-svh relative overflow-hidden bg-transparent scroll-mt-20">
+			<h1 className="sr-only">{t("title")}</h1>
+			{/* Single element with a theme-dependent background, so only one image is downloaded */}
+			<div
+				aria-hidden="true"
+				className="absolute inset-0 z-0 pointer-events-none bg-cover bg-center bg-[url('/background-white.webp')] dark:bg-[url('/background.webp')] [@media(max-height:500px)]:hidden"
 			/>
 
 			<div className="[@media(max-height:500px)]:hidden">
@@ -55,7 +54,7 @@ const Welcome = () => {
 			{/* Rive.app logo */}
 			<div className="absolute inset-0 m-auto z-30 flex items-center justify-center pointer-events-none sm:pr-9 [@media(max-height:500px)]:hidden">
 				<div className="w-44 sm:w-72 md:w-80 lg:w-[350px] aspect-square">
-					{!isLoading && (theme === "light" ? <LogoRiveDark /> : <LogoRiveLight />)}
+					{!isLoading && (resolvedTheme === "light" ? <LogoRiveDark /> : <LogoRiveLight />)}
 				</div>
 			</div>
 

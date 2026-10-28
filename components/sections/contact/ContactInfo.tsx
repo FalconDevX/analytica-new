@@ -2,7 +2,8 @@
 
 import React, { useEffect, useRef, useState } from "react"
 import { useTranslations } from "next-intl"
-import { Check, Mail, Instagram, Facebook, Linkedin, type LucideIcon } from "lucide-react"
+import { Check, Copy, Mail, Send, Instagram, Facebook, Linkedin, type LucideIcon } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 const EMAIL = "analytica@agh.edu.pl"
@@ -67,51 +68,62 @@ const ContactInfo = () => {
 	}
 
 	return (
-		<div className="flex h-full w-full flex-col rounded-xl border border-border bg-card p-6 shadow-sm md:p-8">
-			<h2 className="text-lg font-semibold tracking-tight text-foreground">{t("title")}</h2>
-			<p className="mt-2 text-sm text-muted-foreground">{t("subtitle")}</p>
-
-			<button
-				type="button"
-				onClick={handleCopy}
-				aria-label={copied ? t("copied") : t("copyEmail")}
-				aria-live="polite"
-				className={cn(
-					"mt-4 inline-flex min-h-11 items-center gap-3 rounded-md border px-4 py-3 text-left text-sm font-medium transition-colors cursor-pointer",
-					copied
-						? "border-green-500/60 bg-green-500/10 text-green-700 dark:text-green-400"
-						: "border-border bg-background text-foreground hover:border-ring hover:bg-accent"
-				)}
-			>
-				{copied ? (
-					<Check className="h-4 w-4 shrink-0" aria-hidden="true" />
-				) : (
-					<Mail className="h-4 w-4 shrink-0" aria-hidden="true" />
-				)}
-				<span className="break-all">{copied ? t("copied") : EMAIL}</span>
-			</button>
-
-			<div className="mt-4">
-				<p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">{t("followUs")}</p>
-				<ul className="flex flex-wrap gap-2">
-					{SOCIAL_LINKS.map(({ name, href, icon: Icon, hoverClass }) => (
-						<li key={name}>
-							<a
-								href={href}
-								target="_blank"
-								rel="noopener noreferrer"
-								aria-label={name}
-								className={cn(
-									"inline-flex h-11 w-11 items-center justify-center rounded-md border border-border bg-background text-foreground transition-colors duration-300",
-									hoverClass
-								)}
-							>
-								<Icon className="h-4 w-4" aria-hidden="true" />
-							</a>
-						</li>
-					))}
-				</ul>
+		<div className="flex w-full flex-col items-center rounded-2xl border border-border bg-card p-6 text-center shadow-sm md:p-10">
+			<div className="flex h-12 w-12 items-center justify-center rounded-full border border-border bg-muted">
+				<Mail className="h-5 w-5 text-foreground" aria-hidden="true" />
 			</div>
+
+			<p className="mt-4 break-all text-lg font-semibold tracking-tight text-foreground sm:text-xl">{EMAIL}</p>
+
+			<div className="mt-6 flex w-full flex-col gap-3 sm:flex-row sm:justify-center">
+				<Button asChild size="lg" className="w-full sm:w-auto">
+					<a href={`mailto:${EMAIL}`}>
+						<Send className="h-4 w-4" aria-hidden="true" />
+						{t("writeEmail")}
+					</a>
+				</Button>
+				<button
+					type="button"
+					onClick={handleCopy}
+					aria-live="polite"
+					className={cn(
+						"inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-md border px-5 text-sm font-medium transition-colors cursor-pointer sm:w-auto",
+						copied
+							? "border-green-500/60 bg-green-500/10 text-green-700 dark:text-green-400"
+							: "border-border bg-background text-foreground hover:border-ring hover:bg-accent"
+					)}
+				>
+					{copied ? (
+						<Check className="h-4 w-4 shrink-0" aria-hidden="true" />
+					) : (
+						<Copy className="h-4 w-4 shrink-0" aria-hidden="true" />
+					)}
+					{copied ? t("copied") : t("copyEmail")}
+				</button>
+			</div>
+
+			<div className="my-8 h-px w-full max-w-xs bg-linear-to-r from-transparent via-border to-transparent" aria-hidden />
+
+			<p className="text-sm text-muted-foreground">{t("subtitle")}</p>
+			<p className="mt-4 mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">{t("followUs")}</p>
+			<ul className="flex flex-wrap justify-center gap-2">
+				{SOCIAL_LINKS.map(({ name, href, icon: Icon, hoverClass }) => (
+					<li key={name}>
+						<a
+							href={href}
+							target="_blank"
+							rel="noopener noreferrer"
+							aria-label={name}
+							className={cn(
+								"inline-flex h-11 w-11 items-center justify-center rounded-md border border-border bg-background text-foreground transition-colors duration-300",
+								hoverClass
+							)}
+						>
+							<Icon className="h-4 w-4" aria-hidden="true" />
+						</a>
+					</li>
+				))}
+			</ul>
 		</div>
 	)
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
+import { createContext, useContext, useEffect, useSyncExternalStore, type ReactNode } from "react"
 
 type DeviceMode = "mobile" | "desktop" | null
 
@@ -15,24 +15,22 @@ const DeviceContext = createContext<DeviceContextValue>({
 })
 
 function readForcedDevice(): DeviceMode {
-	if (typeof window === "undefined") return null
-	const params = new URLSearchParams(window.location.search)
-	const device = params.get("device")
+	const device = new URLSearchParams(window.location.search).get("device")
 	if (device === "mobile" || device === "desktop") return device
 	return null
 }
 
+const subscribe = () => () => {}
+
 export function DeviceProvider({ children }: { children: ReactNode }) {
-	const [forcedDevice, setForcedDevice] = useState<DeviceMode>(() => readForcedDevice())
+	// null on the server and during hydration, then the ?device= value — no hydration mismatch.
+	const forcedDevice = useSyncExternalStore(subscribe, readForcedDevice, () => null)
 
 	useEffect(() => {
-		const next = readForcedDevice()
-		setForcedDevice(next)
-
 		const root = document.documentElement
-		root.classList.toggle("device-mobile", next === "mobile")
-		root.classList.toggle("device-desktop", next === "desktop")
-	}, [])
+		root.classList.toggle("device-mobile", forcedDevice === "mobile")
+		root.classList.toggle("device-desktop", forcedDevice === "desktop")
+	}, [forcedDevice])
 
 	return (
 		<DeviceContext.Provider value={{ forcedDevice, isForcedMobile: forcedDevice === "mobile" }}>

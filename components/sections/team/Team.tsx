@@ -23,25 +23,25 @@ const TEAM_LAYOUT: TeamGroupConfig[] = [
 	{
 		groupId: "supervisors",
 		members: [
-			{ id: "opiekun_zietek", image: "/team/drS%C5%82awomirZi%C4%99tek.jpg", size: "supervisor" },
-			{ id: "opiekun_grochot", image: "/team/drKrzysztofGrochot.jpg", size: "supervisor" }
+			{ id: "opiekun_zietek", image: "/team/drS%C5%82awomirZi%C4%99tek.webp", size: "supervisor" },
+			{ id: "opiekun_grochot", image: "/team/drKrzysztofGrochot.webp", size: "supervisor" }
 		]
 	},
 	{
 		groupId: "leadership",
 		members: [
-			{ id: "prezes", image: "/team/NorbertJarzmik.png", size: "lead" },
-			{ id: "wiceprezes", image: "/team/%C5%81ukaszMusia%C5%82.png", size: "lead" },
-			{ id: "sekretarz", image: "/team/WojciechKocemba.png", size: "lead" },
+			{ id: "prezes", image: "/team/NorbertJarzmik.webp", size: "lead" },
+			{ id: "wiceprezes", image: "/team/%C5%81ukaszMusia%C5%82.webp", size: "lead" },
+			{ id: "sekretarz", image: "/team/WojciechKocemba.webp", size: "lead" },
 			{ id: "skarbnik", size: "lead" },
-			{ id: "czlonek_4", image: "/team/PiotrBugiel.png", size: "lead" }
+			{ id: "czlonek_4", image: "/team/PiotrBugiel.webp", size: "lead" }
 		]
 	},
 	{
 		groupId: "team",
 		members: [
-			{ id: "koordynator_anna", image: "/team/AnnaNowosadzka.png" },
-			{ id: "koordynator_olga", image: "/team/OlgaEhrenfeld.png" }
+			{ id: "koordynator_anna", image: "/team/AnnaNowosadzka.webp" },
+			{ id: "koordynator_olga", image: "/team/OlgaEhrenfeld.webp" }
 		]
 	}
 ]
@@ -111,6 +111,8 @@ function MemberAvatar({
 					<img
 						src={image}
 						alt={`${name}, ${role}`}
+						loading="lazy"
+						decoding="async"
 						className="h-full w-full object-cover"
 						onError={() => setImgError(true)}
 					/>

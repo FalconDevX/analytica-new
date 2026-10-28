@@ -45,20 +45,54 @@
     }
   },
   "projects": {
-		"title": "Our projects",
-		"developersChat": {
-			"title": "GeoAnalytica AI",
-			"description": "An intelligent tool for finding the ideal plot for developers and private individuals. The system analyzes spatial data, including land development plans, satellite imagery, terrain features, sunlight exposure, and access to infrastructure and green areas. \n\n The user describes their requirements, and AI automatically searches and organizes the best-matching locations. Each plot has a detailed profile and an assessment of its development potential."
-		},
-		"tradeAnalysis": {
-			"title": "Analytica Invest",
-			"description": "The project aims to develop an application that supports stock market investors by analyzing market data using advanced algorithms. \n\n In later stages, the system will be enhanced with an artificial intelligence module capable of learning from historical and real-time data, ultimately generating its own investment recommendations and making autonomous trading decisions in simulated market environments."
-		},
-		"roboDog": {
-			"title": "RoboDog Rescue AI",
-			"description": "RoboDog is a new generation autonomous walking platform designed for work in extreme fire and disaster conditions. Using LiDAR and thermal imaging systems, the robot quickly locates injured individuals and maps dangerous areas, reaching places where human barriers prevent access. \n\n Thanks to artificial intelligence, the device in real-time determines evacuation routes, guiding people to safety using voice commands and light signals. As a „first responder” support system, RoboDog minimizes the risk of rescuers by taking on the most difficult tasks where life or death depends on seconds."
-		}
-	},
+    "title": "Our projects",
+    "developersChat": {
+      "title": "GeoAnalytica AI",
+      "description": "An intelligent tool for finding the ideal plot for developers and private individuals. The system analyzes spatial data, including land development plans, satellite imagery, terrain features, sunlight exposure, and access to infrastructure and green areas. \n\n The user describes their requirements, and AI automatically searches and organizes the best-matching locations. Each plot has a detailed profile and an assessment of its development potential."
+    },
+    "tradeAnalysis": {
+      "title": "Analytica Invest",
+      "description": "The project aims to develop an application that supports stock market investors by analyzing market data using advanced algorithms. \n\n In later stages, the system will be enhanced with an artificial intelligence module capable of learning from historical and real-time data, ultimately generating its own investment recommendations and making autonomous trading decisions in simulated market environments."
+    },
+    "roboDog": {
+      "title": "RoboDog Rescue AI",
+      "description": "RoboDog is a new generation autonomous walking platform designed for work in extreme fire and disaster conditions. Using LiDAR and thermal imaging systems, the robot quickly locates injured individuals and maps dangerous areas, reaching places where human barriers prevent access. \n\n Thanks to artificial intelligence, the device in real-time determines evacuation routes, guiding people to safety using voice commands and light signals. As a „first responder” support system, RoboDog minimizes the risk of rescuers by taking on the most difficult tasks where life or death depends on seconds."
+    },
+    "emotionAI": {
+      "title": "Emotion AI",
+      "badge": "New project · now recruiting",
+      "description": "A Computer Vision project: a system that analyses a camera feed, detects faces and recognises emotions using convolutional neural networks (CNNs).\n\nWe go all the way — from image processing in OpenCV, through building and training models in PyTorch, to a working solution. It is aimed at people who want to learn AI from the ground up and build a real portfolio project — with mentoring and proven materials.",
+      "detected": "Detected emotion",
+      "landmarks": "Face mesh · 468 landmarks",
+      "emotions": {
+        "joy": "Joy",
+        "surprise": "Surprise",
+        "neutral": "Neutral",
+        "sadness": "Sadness",
+        "anger": "Anger"
+      }
+    },
+    "stockChart": {
+      "forecast": "AI forecast",
+      "simulated": "Simulated data"
+    },
+    "geoSearch": {
+      "placeholder": "ask about a plot...",
+      "query": "looking for a plot in Zwierzyniec, Kraków, 1500 m², buildable, near a road",
+      "found": "2 matches found",
+      "scanning": "Scanning 18 districts, zoning plans and road access…",
+      "districtMatch": "Zwierzyniec · 2 plots match the criteria",
+      "area": "Area",
+      "areaValue": "1,520 · 1,480 m²",
+      "price": "Price",
+      "priceValue": "PLN 312k · 298k",
+      "district": "District",
+      "access": "Access",
+      "accessValue": "Paved road",
+      "zoning": "Zoning",
+      "zoningValue": "Residential (MN)"
+    }
+  },
   "team": {
     "title": "Current board",
     "groups": {
@@ -99,25 +133,14 @@
   },
   "contact": {
     "title": "Contact Us",
-    "subtitle": "Interested in our projects? Get in touch with us using the form below:",
+    "subtitle": "Got a question, a collaboration idea or want to join? Email us or reach out on social media.",
     "info": {
       "title": "Direct contact",
-      "subtitle": "Prefer to write directly or follow us on social media? Pick one of the options below.",
+      "subtitle": "Prefer another channel? You can also find us here.",
       "followUs": "Follow us",
-      "copyEmail": "Click to copy",
-      "copied": "Copied"
-    },
-    "form": {
-      "name": "Name",
-      "email": "Email",
-      "message": "Message",
-      "send": "Send",
-      "sending": "Sending…",
-      "sendingHint": "This may take a few seconds — please don't close the window."
-    },
-    "status": {
-      "success": "Message sent! We'll reply within 24 hours. A confirmation has been sent to your email.",
-      "error": "Something went wrong. Please try again in a moment."
+      "copyEmail": "Copy address",
+      "copied": "Copied",
+      "writeEmail": "Send an email"
     }
   },
   "footer": {

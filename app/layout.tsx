@@ -1,24 +1,20 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Fira_Code } from "next/font/google"
 import { ThemeProvider } from "next-themes"
 import { getMessages, getLocale } from "next-intl/server"
 import { LocaleProvider } from "@/components/providers/LocaleProvider"
 import { DeviceProvider } from "@/hooks/useDevice"
 import LoadingScreen from "@/components/LoadingScreen"
 import { LoadingProvider } from "@/components/LoadingProvider"
+import { SITE_URL } from "@/lib/site"
 import "./globals.css"
 
-const geistSans = Geist({
-	variable: "--font-geist-sans",
-	subsets: ["latin"]
+// The whole site is set in Fira Code; self-hosted by next/font (no render-blocking Google Fonts request).
+const firaCode = Fira_Code({
+	variable: "--font-fira-code",
+	subsets: ["latin", "latin-ext"],
+	display: "swap"
 })
-
-const geistMono = Geist_Mono({
-	variable: "--font-geist-mono",
-	subsets: ["latin"]
-})
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://analytica.agh.edu.pl"
 
 const SITE_DESCRIPTION =
 	"Studenckie koło naukowe AGH rozwijające projekty z obszaru AI, analizy danych, GIS, computer vision i robotyki."
@@ -51,11 +47,7 @@ export const metadata: Metadata = {
 	publisher: "AGH Analytica",
 	category: "technology",
 	alternates: {
-		canonical: "/",
-		languages: {
-			pl: "/",
-			en: "/"
-		}
+		canonical: "/"
 	},
 	robots: {
 		index: true,
@@ -78,9 +70,10 @@ export const metadata: Metadata = {
 		description: SITE_DESCRIPTION,
 		images: [
 			{
-				url: "/analytica_logo1-black.png",
-				width: 1200,
-				height: 1200,
+				url: "/project-geo.png",
+				width: 1920,
+				height: 1080,
+				type: "image/png",
 				alt: "AGH Analytica — koło naukowe AI, Data Science i GIS"
 			}
 		]
@@ -89,7 +82,7 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 		title: "AGH Analytica — AI, Data Science i GIS",
 		description: SITE_DESCRIPTION,
-		images: ["/analytica_logo1-black.png"]
+		images: ["/project-geo.png"]
 	},
 	icons: {
 		icon: [
@@ -115,15 +108,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 					dangerouslySetInnerHTML={{
 						__html: `
               (function() {
-                try {
-                  const theme = localStorage.getItem('theme') || 'system';
-                  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                  if (theme === 'dark' || (theme === 'system' && systemPrefersDark)) {
-                    document.documentElement.classList.add('dark');
-                  } else {
-                    document.documentElement.classList.remove('dark');
-                  }
-                } catch (_) {}
+                // Theme class is applied by next-themes' own blocking script (defaultTheme="dark").
                 try {
                   var device = new URLSearchParams(window.location.search).get('device');
                   if (device === 'mobile') document.documentElement.classList.add('device-mobile');
@@ -133,10 +118,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             `
 					}}
 				/>
-				<link
-					href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&family=Fira+Code:wght@300..700&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Questrial&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Winky+Sans:ital,wght@0,300..900;1,300..900&display=swap"
-					rel="stylesheet"
-				></link>
 				<script
 					type="application/ld+json"
 					dangerouslySetInnerHTML={{
@@ -183,7 +164,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 					}}
 				/>
 			</head>
-			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+			<body className={`${firaCode.variable} antialiased`}>
 				<LocaleProvider initialLocale={locale} initialMessages={messages}>
 					<ThemeProvider attribute="class" defaultTheme="dark" enableSystem enableColorScheme={false}>
 						<LoadingProvider>

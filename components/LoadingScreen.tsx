@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import useMounted from "@/hooks/useMounted"
 import { useRive, Layout, Fit, Alignment } from "@rive-app/react-canvas"
 import { useTheme } from "next-themes"
 import { useLoading } from "./LoadingProvider"
@@ -19,12 +20,8 @@ function RiveLoader({ src }: { src: string }) {
 export default function LoadingScreen() {
 	const { resolvedTheme } = useTheme()
 	const { isLoading } = useLoading()
-	const [isMounted, setIsMounted] = useState(false)
+	const isMounted = useMounted()
 	const [shouldRender, setShouldRender] = useState(true)
-
-	useEffect(() => {
-		setIsMounted(true)
-	}, [])
 
 	useEffect(() => {
 		if (!isLoading) {

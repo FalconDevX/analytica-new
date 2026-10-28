@@ -57,6 +57,40 @@
 		"roboDog": {
 			"title": "RoboDog Rescue AI",
 			"description": "RoboDog to autonomiczna platforma krocząca nowej generacji, przeznaczona do pracy w ekstremalnych warunkach pożarów i katastrof. Wykorzystując systemy LiDAR oraz termowizję, robot błyskawicznie lokalizuje poszkodowanych i mapuje niebezpieczne strefy, docierając tam, gdzie bariery terenowe uniemożliwiają wejście człowieka. \n\n Dzięki sztucznej inteligencji urządzenie w czasie rzeczywistym wyznacza ścieżki ewakuacyjne, prowadząc ludzi do bezpieczeństwa za pomocą głosu i światła. Jako system typu „first responder”, RoboDog minimalizuje ryzyko ratowników, przejmując najtrudniejsze zadania tam, gdzie o życiu decydują sekundy."
+		},
+		"emotionAI": {
+			"title": "Emotion AI",
+			"badge": "Nowy projekt · rekrutacja trwa",
+			"description": "Projekt z obszaru Computer Vision: system, który analizuje obraz z kamery, wykrywa twarz i rozpoznaje emocje za pomocą konwolucyjnych sieci neuronowych (CNN).\n\nPrzejdziemy całą drogę — od przetwarzania obrazów w OpenCV, przez budowę i trenowanie modeli w PyTorch, aż po działające rozwiązanie. Projekt jest dla osób, które chcą nauczyć się AI od podstaw i zbudować prawdziwy projekt do portfolio — z mentoringiem i sprawdzonymi materiałami.",
+			"detected": "Rozpoznana emocja",
+			"landmarks": "Siatka twarzy · 468 punktów",
+			"emotions": {
+				"joy": "Radość",
+				"surprise": "Zaskoczenie",
+				"neutral": "Neutralność",
+				"sadness": "Smutek",
+				"anger": "Złość"
+			}
+		},
+		"stockChart": {
+			"forecast": "Prognoza AI",
+			"simulated": "Dane symulowane"
+		},
+		"geoSearch": {
+			"placeholder": "zapytaj o działkę...",
+			"query": "szukam działki w Zwierzyńcu w Krakowie, 1500 m², budowlana, blisko drogi",
+			"found": "Znaleziono 2 dopasowania",
+			"scanning": "Analizuję 18 dzielnic, plany i dostęp do dróg…",
+			"districtMatch": "Zwierzyniec · 2 działki spełniają kryteria",
+			"area": "Powierzchnia",
+			"areaValue": "1 520 · 1 480 m²",
+			"price": "Cena",
+			"priceValue": "312 · 298 tys. PLN",
+			"district": "Dzielnica",
+			"access": "Dostęp",
+			"accessValue": "Droga asfaltowa",
+			"zoning": "Klasa",
+			"zoningValue": "Budowlana MN"
 		}
 	},
 	"team": {
@@ -99,25 +133,14 @@
 	},
 	"contact": {
 		"title": "Skontaktuj się z nami",
-		"subtitle": "Zainteresowany naszymi projektami? Skontaktuj się z nami za pomocą poniższego formularza:",
+		"subtitle": "Masz pytanie, pomysł na współpracę albo chcesz dołączyć? Napisz do nas albo odezwij się w social mediach.",
 		"info": {
 			"title": "Bezpośredni kontakt",
-			"subtitle": "Wolisz napisać bezpośrednio albo śledzić nas w social media? Wybierz jedną z opcji poniżej.",
+			"subtitle": "Wolisz inną formę? Znajdziesz nas też tutaj.",
 			"followUs": "Obserwuj nas",
-			"copyEmail": "Kliknij, aby skopiować",
-			"copied": "Skopiowano"
-		},
-		"form": {
-			"name": "Imię",
-			"email": "Email",
-			"message": "Wiadomość",
-			"send": "Wyślij",
-			"sending": "Wysyłanie…",
-			"sendingHint": "To może zająć kilka sekund — nie zamykaj okna."
-		},
-		"status": {
-			"success": "Wiadomość wysłana! Odpowiemy w ciągu 24 godzin. Potwierdzenie wysłaliśmy na Twój email.",
-			"error": "Coś poszło nie tak. Spróbuj ponownie za chwilę."
+			"copyEmail": "Kopiuj adres",
+			"copied": "Skopiowano",
+			"writeEmail": "Napisz e-mail"
 		}
 	},
 	"footer": {

@@ -1,24 +1,24 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useSyncExternalStore } from "react"
 
-function getIsMobile(breakpoint: number) {
-	if (typeof window === "undefined") return false
-	return window.matchMedia(`(max-width: ${breakpoint - 1}px)`).matches
-}
-
+// Returns false during SSR and hydration, then the real media-query result, so the
+// server and first client render always match.
 export default function useIsMobile(breakpoint = 768) {
-	const [isMobile, setIsMobile] = useState<boolean>(() => getIsMobile(breakpoint))
+	const query = `(max-width: ${breakpoint - 1}px)`
 
-	useEffect(() => {
-		if (typeof window === "undefined") return
-		const query = `(max-width: ${breakpoint - 1}px)`
-		const mql = window.matchMedia(query)
-		const update = () => setIsMobile(mql.matches)
-		update()
-		mql.addEventListener("change", update)
-		return () => mql.removeEventListener("change", update)
-	}, [breakpoint])
+	const subscribe = useCallback(
+		(onChange: () => void) => {
+			const mql = window.matchMedia(query)
+			mql.addEventListener("change", onChange)
+			return () => mql.removeEventListener("change", onChange)
+		},
+		[query]
+	)
 
-	return isMobile
+	return useSyncExternalStore(
+		subscribe,
+		() => window.matchMedia(query).matches,
+		() => false
+	)
 }

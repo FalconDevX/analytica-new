@@ -5,6 +5,8 @@
 
 html,
 body {
+  /* hidden is the fallback for Safari < 16, which ignores clip */
+  overflow-x: hidden;
   overflow-x: clip;
   max-width: 100%;
 }
@@ -17,7 +19,7 @@ body {
 }
 
 body {
-  font-family: Fira Code, sans-serif;
+  font-family: var(--font-fira-code), ui-monospace, monospace;
 }
 
 html {
@@ -173,3 +175,82 @@ html.device-mobile .sm\:grid-cols-3 {
   grid-template-columns: 1fr !important;
 }
 
+
+/* ---------------------------------------------------------------
+   GeoSearch map demo (components/sections/projects/KrakowMap.tsx)
+--------------------------------------------------------------- */
+.geo-root {
+  --geo-bg: #f4f5f7;
+  --geo-district: rgba(148, 163, 184, 0.2);
+  --geo-district-stroke: rgba(100, 116, 139, 0.55);
+  --geo-scan-fill: rgba(245, 158, 11, 0.16);
+  --geo-hot-fill: rgba(245, 158, 11, 0.2);
+  --geo-hot-stroke: #b45309;
+  --geo-parcel: rgba(245, 158, 11, 0.75);
+  --geo-label: rgba(51, 65, 85, 0.65);
+  --geo-grid: rgba(100, 116, 139, 0.45);
+  --geo-road: #a1a1aa;
+  --geo-sweep: rgba(245, 158, 11, 0.12);
+}
+
+.dark .geo-root {
+  --geo-bg: #07080b;
+  --geo-district: rgba(63, 63, 70, 0.32);
+  --geo-district-stroke: rgba(113, 113, 122, 0.6);
+  --geo-scan-fill: rgba(251, 191, 36, 0.18);
+  --geo-hot-fill: rgba(245, 158, 11, 0.2);
+  --geo-hot-stroke: #fcd34d;
+  --geo-parcel: rgba(245, 158, 11, 0.6);
+  --geo-label: rgba(212, 212, 216, 0.55);
+  --geo-grid: rgba(161, 161, 170, 0.3);
+  --geo-road: #52525b;
+  --geo-sweep: rgba(251, 191, 36, 0.1);
+}
+
+.geo-scan {
+  animation: geo-scan 0.9s ease-in-out infinite alternate;
+}
+
+.geo-ring {
+  stroke: var(--geo-hot-stroke);
+  animation: geo-ring 1.8s ease-out infinite;
+}
+
+.geo-sweep {
+  background: linear-gradient(90deg, transparent, var(--geo-sweep), transparent);
+  animation: geo-sweep 1.3s linear infinite;
+}
+
+@keyframes geo-scan {
+  to {
+    fill: var(--geo-scan-fill);
+  }
+}
+
+@keyframes geo-ring {
+  from {
+    stroke-width: 2;
+    stroke-opacity: 0.8;
+  }
+  to {
+    stroke-width: 18;
+    stroke-opacity: 0;
+  }
+}
+
+@keyframes geo-sweep {
+  from {
+    left: -33%;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .geo-scan,
+  .geo-ring,
+  .geo-sweep {
+    animation: none;
+  }
+}

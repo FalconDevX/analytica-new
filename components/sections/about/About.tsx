@@ -3,34 +3,36 @@ import { useTranslations } from "next-intl"
 import { Facebook, Instagram, Linkedin } from "lucide-react"
 import AboutUs from "./AboutUs"
 import StatsCounter from "./StatsCounter"
-import { useTheme } from "next-themes"
-import { useEffect, useState } from "react"
 
 const About = () => {
 	const t = useTranslations("about")
-	const { resolvedTheme } = useTheme()
-	const [mounted, setMounted] = useState(false)
-	useEffect(() => setMounted(true), [])
-	const isLight = mounted && resolvedTheme === "light"
 
 	return (
 		<div id="about" className="appear w-full min-h-[60vh] flex flex-col items-center scroll-mt-20">
-			<h1 className="text-black dark:text-white text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight py-6 px-6 text-center">
+			<h2 className="text-black dark:text-white text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight py-6 px-6 text-center">
 				{t("title")}
-			</h1>
+			</h2>
 			<div className="flex flex-col md:flex-row gap-8 justify-center max-w-6xl mx-auto">
 				<div className="w-full md:w-1/2 px-5 flex flex-col md:justify-start">
-					<div className="w-full h-auto object-cover mb-4" suppressHydrationWarning>
-						{mounted && (
+					<div className="w-full h-auto object-cover mb-4">
+						{/* Both variants are rendered so SSR reserves the space; the hidden lazy one is never fetched */}
+						{[
+							{ src: "/neural_network_white.webp", className: "dark:hidden" },
+							{ src: "/neural_network2.webp", className: "hidden dark:block" }
+						].map((img) => (
 							<img
-								src={isLight ? "neural_network_white.png" : "neural_network2.png"}
-								className="w-full h-[260px] sm:h-[300px] md:h-[400px] object-contain"
+								key={img.src}
+								src={img.src}
+								alt=""
+								loading="lazy"
+								decoding="async"
+								className={`w-full h-[260px] sm:h-[300px] md:h-[400px] object-contain ${img.className}`}
 								style={{
 									WebkitMaskImage: "linear-gradient(to bottom, black 70%, transparent 100%)",
 									maskImage: "linear-gradient(to bottom, black 70%, transparent 100%)"
 								}}
 							/>
-						)}
+						))}
 					</div>
 					<StatsCounter />
 					<p className="dark:text-white text-black text-md max-w-xl whitespace-pre-line mt-2">{t("description")}</p>

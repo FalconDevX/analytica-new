@@ -2,616 +2,479 @@
 
 import { useEffect, useRef } from "react"
 import { useTheme } from "next-themes"
+import { useTranslations } from "next-intl"
 
-type Point = number
+type Candle = { o: number; h: number; l: number; c: number; v: number }
 
+// Monochrome like the rest of the site, with a single amber accent (shared with the GeoSearch map)
+// reserved for what the "AI" adds: the forecast and the live price.
 type Palette = {
-	bg: string
-	starAlphaMul: number
-	bokehAlphaMul: number
-	binaryRain: string
-	gridLine: string
-	gridDot: string
-	ghostStroke: string
-	ghostGlow: string
-	areaStopsDown: [string, string, string, string, string]
-	areaStopsUp: [string, string, string, string, string]
-	wickDashBase: string
-	wickDashHot: (hr: number) => string
-	lineGradStops: [string, string, string, string, string, string]
-	lineOuterStroke: string
-	lineOuterGlow: string
-	lineMidStroke: string
-	lineMidGlow: string
-	lineMainGlow: string
-	wickBear: string
-	wickBull: string
-	bearGrad: [string, string, string]
-	bullGrad: [string, string, string]
-	bodyStrokeBear: string
-	bodyStrokeBull: string
-	bearGlow: string
-	bullGlow: string
-	lastPulseUp: (alpha: number) => string
-	lastPulseDown: (alpha: number) => string
-	lastDotUp: string
-	lastDotDown: string
-	lastDotUpGlow: string
-	lastDotDownGlow: string
-	lastDotCore: string
-	priceText: string
-	priceShadow: string
-	axisText: string
-	scanStops: [string, string, string, string, string]
-	hudTextWarm: (alpha: number) => string
-	hudTextCool: (alpha: number) => string
-	hudTextBlue: (alpha: number) => string
-	streamOk: string
+	ink: (alpha: number) => string
+	accent: string
+	accentInk: string
+	tooltipBg: string
 }
 
-const DARK_PALETTE: Palette = {
-	bg: "#000000",
-	starAlphaMul: 1,
-	bokehAlphaMul: 1,
-	binaryRain: "rgba(255, 200, 80, 0.04)",
-	gridLine: "rgba(255, 255, 255, 0.06)",
-	gridDot: "rgba(255, 255, 255, 0.28)",
-	ghostStroke: "rgba(255, 140, 110, 0.55)",
-	ghostGlow: "rgba(255, 45, 65, 0.78)",
-	areaStopsDown: [
-		"rgba(255, 255, 90, 0.1)",
-		"rgba(255, 160, 40, 0.08)",
-		"rgba(255, 80, 50, 0.06)",
-		"rgba(255, 40, 70, 0.05)",
-		"rgba(160, 0, 40, 0)"
-	],
-	areaStopsUp: [
-		"rgba(180, 255, 180, 0.12)",
-		"rgba(90, 230, 130, 0.09)",
-		"rgba(40, 200, 100, 0.07)",
-		"rgba(20, 160, 80, 0.05)",
-		"rgba(0, 90, 40, 0)"
-	],
-	wickDashBase: "rgba(255, 200, 80, 0.32)",
-	wickDashHot: (hr) => `rgba(255, ${80 - 40 * hr}, ${70 - 20 * hr}, ${0.32 + hr * 0.15})`,
-	lineGradStops: ["#ff2244", "#ff8c00", "#ffcc00", "#ffff00", "#ff1030", "#ffaa33"],
-	lineOuterStroke: "rgba(255, 70, 50, 0.38)",
-	lineOuterGlow: "rgba(255, 45, 65, 0.78)",
-	lineMidStroke: "rgba(255, 150, 70, 0.52)",
-	lineMidGlow: "rgba(255, 120, 60, 0.55)",
-	lineMainGlow: "rgba(255, 200, 80, 0.75)",
-	wickBear: "rgba(255, 150, 130, 0.88)",
-	wickBull: "rgba(255, 235, 170, 0.82)",
-	bearGrad: ["rgba(255, 85, 95, 0.98)", "rgba(255, 45, 70, 0.94)", "rgba(195, 20, 50, 0.9)"],
-	bullGrad: ["rgba(255, 250, 140, 0.96)", "rgba(255, 190, 60, 0.9)", "rgba(255, 130, 35, 0.88)"],
-	bodyStrokeBear: "rgba(255, 210, 210, 0.48)",
-	bodyStrokeBull: "rgba(255, 255, 230, 0.4)",
-	bearGlow: "rgba(255, 45, 65, 0.78)",
-	bullGlow: "rgba(255, 140, 0, 0.75)",
-	lastPulseUp: (a) => `rgba(255, 255, 80, ${a})`,
-	lastPulseDown: (a) => `rgba(255, 100, 100, ${a})`,
-	lastDotUp: "#ffb200",
-	lastDotDown: "#ff2244",
-	lastDotUpGlow: "#ffff00",
-	lastDotDownGlow: "rgba(255, 45, 65, 0.78)",
-	lastDotCore: "#ffffff",
-	priceText: "rgba(245, 232, 210, 0.9)",
-	priceShadow: "rgba(255, 190, 100, 0.2)",
-	axisText: "rgba(255, 220, 120, 0.5)",
-	scanStops: [
-		"rgba(255, 180, 120, 0)",
-		"rgba(255, 200, 100, 0.05)",
-		"rgba(255, 120, 100, 0.08)",
-		"rgba(255, 220, 140, 0.05)",
-		"rgba(255, 160, 100, 0)"
-	],
-	hudTextWarm: (a) => `rgba(255, 170, 130, ${a})`,
-	hudTextCool: (a) => `rgba(255, 200, 100, ${a})`,
-	hudTextBlue: (a) => `rgba(200, 220, 255, ${a})`,
-	streamOk: "rgba(255, 255, 100, 0.35)"
+const DARK: Palette = {
+	ink: (a) => `rgba(255, 255, 255, ${a})`,
+	accent: "#fbbf24",
+	accentInk: "#0a0a0a",
+	tooltipBg: "rgba(12, 12, 14, 0.94)"
 }
 
-const LIGHT_PALETTE: Palette = {
-	bg: "#fafafa",
-	starAlphaMul: 0,
-	bokehAlphaMul: 0.25,
-	binaryRain: "rgba(180, 120, 40, 0.05)",
-	gridLine: "rgba(0, 0, 0, 0.06)",
-	gridDot: "rgba(0, 0, 0, 0.22)",
-	ghostStroke: "rgba(220, 60, 40, 0.35)",
-	ghostGlow: "rgba(220, 38, 38, 0.3)",
-	areaStopsDown: [
-		"rgba(234, 179, 8, 0.14)",
-		"rgba(234, 88, 12, 0.11)",
-		"rgba(220, 38, 38, 0.08)",
-		"rgba(185, 28, 28, 0.05)",
-		"rgba(127, 29, 29, 0)"
-	],
-	areaStopsUp: [
-		"rgba(134, 239, 172, 0.2)",
-		"rgba(74, 222, 128, 0.14)",
-		"rgba(34, 197, 94, 0.1)",
-		"rgba(22, 163, 74, 0.06)",
-		"rgba(20, 83, 45, 0)"
-	],
-	wickDashBase: "rgba(180, 83, 9, 0.32)",
-	wickDashHot: (hr) => `rgba(${200 - 40 * hr}, ${60 - 30 * hr}, 30, ${0.28 + hr * 0.2})`,
-	lineGradStops: ["#b91c1c", "#ea580c", "#d97706", "#eab308", "#dc2626", "#c2410c"],
-	lineOuterStroke: "rgba(220, 38, 38, 0.22)",
-	lineOuterGlow: "rgba(220, 38, 38, 0.25)",
-	lineMidStroke: "rgba(234, 88, 12, 0.4)",
-	lineMidGlow: "rgba(234, 88, 12, 0.35)",
-	lineMainGlow: "rgba(234, 88, 12, 0.3)",
-	wickBear: "rgba(153, 27, 27, 0.85)",
-	wickBull: "rgba(120, 53, 15, 0.75)",
-	bearGrad: ["rgba(239, 68, 68, 0.95)", "rgba(220, 38, 38, 0.92)", "rgba(153, 27, 27, 0.9)"],
-	bullGrad: ["rgba(252, 211, 77, 0.96)", "rgba(251, 146, 60, 0.92)", "rgba(217, 119, 6, 0.9)"],
-	bodyStrokeBear: "rgba(127, 29, 29, 0.45)",
-	bodyStrokeBull: "rgba(120, 53, 15, 0.42)",
-	bearGlow: "rgba(220, 38, 38, 0.28)",
-	bullGlow: "rgba(234, 88, 12, 0.25)",
-	lastPulseUp: (a) => `rgba(217, 119, 6, ${a})`,
-	lastPulseDown: (a) => `rgba(220, 38, 38, ${a})`,
-	lastDotUp: "#d97706",
-	lastDotDown: "#dc2626",
-	lastDotUpGlow: "rgba(234, 179, 8, 0.6)",
-	lastDotDownGlow: "rgba(220, 38, 38, 0.55)",
-	lastDotCore: "#ffffff",
-	priceText: "rgba(60, 30, 5, 0.9)",
-	priceShadow: "rgba(234, 88, 12, 0.22)",
-	axisText: "rgba(80, 40, 5, 0.7)",
-	scanStops: [
-		"rgba(234, 88, 12, 0)",
-		"rgba(234, 88, 12, 0.04)",
-		"rgba(220, 38, 38, 0.06)",
-		"rgba(234, 179, 8, 0.04)",
-		"rgba(234, 88, 12, 0)"
-	],
-	hudTextWarm: (a) => `rgba(153, 73, 10, ${a * 1.6})`,
-	hudTextCool: (a) => `rgba(120, 50, 5, ${a * 1.6})`,
-	hudTextBlue: (a) => `rgba(30, 41, 90, ${a * 1.8})`,
-	streamOk: "rgba(21, 128, 61, 0.6)"
+const LIGHT: Palette = {
+	ink: (a) => `rgba(10, 10, 10, ${a})`,
+	accent: "#d97706",
+	accentInk: "#ffffff",
+	tooltipBg: "rgba(255, 255, 255, 0.96)"
 }
 
-function rnd(seed: number) {
-	const x = Math.sin(seed) * 10000
-	return x - Math.floor(x)
+const CANDLE_MS = 1200
+const FORECAST_STEPS = 8
+const START_PRICE = 248
+const MAX_HISTORY = 200
+
+const randn = () => (Math.random() + Math.random() + Math.random() + Math.random() - 2) * 1.2
+
+function emaSeries(values: number[], period: number) {
+	const k = 2 / (period + 1)
+	const out: number[] = []
+	let prev = values[0]
+	for (const v of values) {
+		prev = v * k + prev * (1 - k)
+		out.push(prev)
+	}
+	return out
+}
+
+function niceStep(range: number, targetLines: number) {
+	const raw = range / targetLines
+	const mag = Math.pow(10, Math.floor(Math.log10(raw)))
+	for (const m of [1, 2, 2.5, 5, 10]) if (m * mag >= raw) return m * mag
+	return 10 * mag
+}
+
+function hexAlpha(hex: string, alpha: number) {
+	const n = parseInt(hex.slice(1), 16)
+	return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`
 }
 
 export default function StockChart() {
+	const t = useTranslations("projects.stockChart")
 	const canvasRef = useRef<HTMLCanvasElement | null>(null)
-	const frameRef = useRef<number | null>(null)
-	const paletteRef = useRef<Palette>(DARK_PALETTE)
+	const priceRef = useRef<HTMLSpanElement | null>(null)
+	const changeRef = useRef<HTMLSpanElement | null>(null)
+	const paletteRef = useRef<Palette>(DARK)
+	const redrawRef = useRef<(() => void) | null>(null)
 	const { resolvedTheme } = useTheme()
 
 	useEffect(() => {
-		paletteRef.current = resolvedTheme === "light" ? LIGHT_PALETTE : DARK_PALETTE
+		paletteRef.current = resolvedTheme === "light" ? LIGHT : DARK
+		redrawRef.current?.()
 	}, [resolvedTheme])
 
 	useEffect(() => {
-		const canvas = canvasRef.current!
-		const ctx = canvas.getContext("2d")!
+		const canvas = canvasRef.current
+		const ctx = canvas?.getContext("2d")
+		if (!canvas || !ctx) return
+		const parent = canvas.parentElement!
+		const fontFamily = getComputedStyle(document.body).fontFamily || "ui-monospace, monospace"
+		const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
 
-		let W = 0,
-			H = 0,
-			cssW = 0,
-			cssH = 0
-
+		let cssW = 0
+		let cssH = 0
 		const resize = () => {
-			const parent = canvas.parentElement!
-			const dpr = window.devicePixelRatio || 1
 			cssW = parent.clientWidth
 			cssH = parent.clientHeight
-			W = canvas.width = Math.round(cssW * dpr)
-			H = canvas.height = Math.round(cssH * dpr)
-			canvas.style.width = "100%"
-			canvas.style.height = "100%"
+			const dpr = Math.min(window.devicePixelRatio || 1, cssW < 640 ? 1.5 : 2)
+			canvas.width = Math.round(cssW * dpr)
+			canvas.height = Math.round(cssH * dpr)
 			ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 		}
-
 		resize()
-		window.addEventListener("resize", resize)
-
-		const N = 60
-		let prices: Point[] = Array.from({ length: N + 1 }, (_, i) => {
-			const spike = rnd(i * 4.3) > 0.78 ? (rnd(i * 9.1) - 0.5) * 28 : 0
-			return 550 + Math.sin(i * 0.32) * 22 + (rnd(i * 1.7) - 0.5) * 18 + spike
+		// Resizing clears the canvas, so always repaint afterwards (matters when the loop is not running).
+		const resizeObserver = new ResizeObserver(() => {
+			resize()
+			requestDraw()
 		})
-		let ghost: Point[] = prices.map((p, i) => p + Math.sin(i * 0.55) * 8 - 6)
-		let t = 0
-		let scanY = 0
-		let hudPhase = 0
-		let candleAcc = 0
-		const CANDLE_INTERVAL = 0.2
+		resizeObserver.observe(parent)
+
+		// --- Market simulation: a random walk that switches between trending regimes -------------
+		let drift = 0
+		let vol = 1
+		let regimeLeft = 0
+		const nextRegime = () => {
+			drift = (Math.random() - 0.47) * 0.9
+			vol = 0.6 + Math.random() * 0.9
+			regimeLeft = 12 + Math.floor(Math.random() * 18)
+		}
+		const tick = (candle: Candle, fraction: number) => {
+			if (!(fraction > 0)) return
+			const meanRevert = (START_PRICE - candle.c) * 0.012
+			const move = (drift + meanRevert) * fraction + vol * Math.sqrt(fraction) * randn() * 1.3
+			candle.c += move
+			candle.h = Math.max(candle.h, candle.c)
+			candle.l = Math.min(candle.l, candle.c)
+			candle.v += (Math.abs(move) * 30 + Math.random() * 4) * fraction * 10
+		}
+		const openCandle = (price: number): Candle => ({ o: price, h: price, l: price, c: price, v: 0 })
+
+		const candles: Candle[] = []
+		nextRegime()
+		let last = START_PRICE
+		for (let i = 0; i < 140; i++) {
+			const candle = openCandle(last)
+			for (let s = 0; s < 10; s++) tick(candle, 0.1)
+			candles.push(candle)
+			last = candle.c
+			if (--regimeLeft <= 0) nextRegime()
+		}
+		candles.push(openCandle(last))
+		const sessionOpen = candles[candles.length - 60].o
+
+		let candleElapsed = 0
+		let yMin = 0
+		let yMax = 0
+		let forecastSlope = 0
 		let lastTs = 0
+		let lastHeaderUpdate = 0
+		let pointer: { x: number; y: number } | null = null
 
-		const bokeh = Array.from({ length: 34 }, (_, i) => {
-			const roll = rnd(i * 9)
-			let hue = "255, 200, 120"
-			if (roll < 0.28) hue = "255, 45, 75"
-			else if (roll < 0.52) hue = "255, 90, 50"
-			else if (roll < 0.72) hue = "255, 200, 60"
-			else if (roll < 0.88) hue = "180, 220, 255"
-			return {
-				x: rnd(i * 2.1),
-				y: rnd(i * 3.7),
-				r: 40 + rnd(i) * 120,
-				a: 0.028 + rnd(i * 5) * 0.07,
-				hue
+		const onPointerMove = (e: PointerEvent) => {
+			if (e.pointerType === "touch") return
+			const rect = canvas.getBoundingClientRect()
+			pointer = { x: e.clientX - rect.left, y: e.clientY - rect.top }
+			requestDraw()
+		}
+		const onPointerLeave = () => {
+			pointer = null
+			requestDraw()
+		}
+		canvas.addEventListener("pointermove", onPointerMove)
+		canvas.addEventListener("pointerleave", onPointerLeave)
+
+		const updateHeader = (price: number) => {
+			const change = ((price - sessionOpen) / sessionOpen) * 100
+			if (priceRef.current) priceRef.current.textContent = price.toFixed(2)
+			if (changeRef.current) {
+				changeRef.current.textContent = `${change >= 0 ? "▲" : "▼"} ${Math.abs(change).toFixed(2)}%`
 			}
-		})
-
-		const stars = Array.from({ length: 220 }, () => ({
-			x: Math.random(),
-			y: Math.random(),
-			r: Math.random() * 1.1 + 0.15,
-			brightness: Math.random() * 0.45 + 0.15,
-			twinkle: Math.random() * Math.PI * 2,
-			twinkleSpeed: Math.random() * 0.028 + 0.004
-		}))
-
-		const gridRows = 10,
-			gridCols = 16
-
-		const hudLines = ["SIM_MODE: HFT_ALPHA", "LAT_MS: 0.42", "DEPTH: L2_AGG", "SIGMA: 1.28", "CORR_SPX: 0.71"]
-
-		const draw = (ts: number) => {
-			if (!lastTs) lastTs = ts
-			const dt = Math.min(0.05, (ts - lastTs) / 1000)
-			lastTs = ts
-			t += dt
-			hudPhase += dt * 1.4
-			scanY = (scanY + cssH * 0.25 * dt + dt * 18) % (cssH + 40)
-
-			candleAcc += dt
-			while (candleAcc >= CANDLE_INTERVAL) {
-				candleAcc -= CANDLE_INTERVAL
-				const last = prices[prices.length - 1]
-				const volatility = Math.random() < 0.22 ? 22 : Math.random() < 0.45 ? 10 : 4
-				const next = last + (Math.random() - 0.48) * volatility + Math.sin(t * 0.55) * 1.4 + Math.cos(t * 0.31) * 0.9
-				prices.push(Math.max(488, Math.min(628, next)))
-				prices.shift()
-				const gLast = ghost[ghost.length - 1]
-				ghost.push(gLast + (Math.random() - 0.5) * 5 + Math.sin(t * 0.9) * 2)
-				ghost.shift()
-			}
-			const shift = candleAcc / CANDLE_INTERVAL
-
-			const P = paletteRef.current
-
-			const pad = { l: 52, r: 108, t: 56, b: 64 }
-			const w = cssW,
-				h = cssH
-			const cw = w - pad.l - pad.r
-			const ch = h - pad.t - pad.b
-			const min = Math.min(...prices) - 14
-			const max = Math.max(...prices) + 14
-			const denom = prices.length - 2
-			const xS = (i: number) => pad.l + ((i - shift) / denom) * cw
-			const yS = (p: number) => pad.t + ch - ((p - min) / (max - min)) * ch
-			const baseY = pad.t + ch
-
-			const heatAt = (i: number) => {
-				if (i <= 0) return rnd(i * 11 + t) * 0.38
-				const drop = prices[i - 1] - prices[i]
-				return Math.max(0, Math.min(1, drop / 11 + rnd(i * 3 + Math.floor(t * 28)) * 0.34))
-			}
-
-			ctx.fillStyle = P.bg
-			ctx.fillRect(0, 0, w, h)
-
-			if (P.bokehAlphaMul > 0) {
-				bokeh.forEach((b) => {
-					const g = ctx.createRadialGradient(b.x * w, b.y * h, 0, b.x * w, b.y * h, b.r)
-					g.addColorStop(0, `rgba(${b.hue}, ${b.a * P.bokehAlphaMul})`)
-					g.addColorStop(1, "rgba(0,0,0,0)")
-					ctx.fillStyle = g
-					ctx.fillRect(0, 0, w, h)
-				})
-			}
-
-			if (P.starAlphaMul > 0) {
-				stars.forEach((s, si) => {
-					s.twinkle += s.twinkleSpeed
-					const alpha = s.brightness * (0.45 + 0.55 * Math.sin(s.twinkle)) * P.starAlphaMul
-					const warm = rnd(si * 8.3) > 0.72
-					ctx.beginPath()
-					ctx.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2)
-					ctx.fillStyle = warm ? `rgba(255, 160, 150, ${alpha * 0.42})` : `rgba(255, 245, 220, ${alpha * 0.32})`
-					ctx.fill()
-				})
-			}
-
-			ctx.save()
-			ctx.font = "9px ui-monospace, monospace"
-			ctx.fillStyle = P.binaryRain
-			for (let row = 0; row < 14; row++) {
-				let line = ""
-				for (let col = 0; col < 42; col++) {
-					line += rnd(row * 97 + col * 13 + t * 3) > 0.55 ? (rnd(col) > 0.5 ? "1" : "0") : " "
-				}
-				ctx.fillText(line, 8 + (row % 3) * 40, 14 + row * 11 + Math.sin(t + row) * 2)
-			}
-			ctx.restore()
-
-			ctx.save()
-			ctx.strokeStyle = P.gridLine
-			ctx.lineWidth = 0.5
-			ctx.setLineDash([2, 14])
-			for (let i = 0; i <= gridRows; i++) {
-				const y = pad.t + (i / gridRows) * ch
-				ctx.beginPath()
-				ctx.moveTo(pad.l, y)
-				ctx.lineTo(w - pad.r, y)
-				ctx.stroke()
-			}
-			for (let i = 0; i <= gridCols; i++) {
-				const x = pad.l + (i / gridCols) * cw
-				ctx.beginPath()
-				ctx.moveTo(x, pad.t)
-				ctx.lineTo(x, pad.t + ch)
-				ctx.stroke()
-			}
-			ctx.setLineDash([])
-
-			for (let r = 0; r <= gridRows; r++) {
-				for (let c = 0; c <= gridCols; c++) {
-					const gx = pad.l + (c / gridCols) * cw
-					const gy = pad.t + (r / gridRows) * ch
-					ctx.beginPath()
-					ctx.arc(gx, gy, 1.1, 0, Math.PI * 2)
-					ctx.fillStyle = P.gridDot
-					ctx.fill()
-				}
-			}
-			ctx.restore()
-
-			ctx.save()
-			ctx.globalAlpha = 0.16
-			ctx.beginPath()
-			ghost.forEach((p, i) => {
-				const x = xS(i),
-					y = yS(p)
-				i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
-			})
-			ctx.strokeStyle = P.ghostStroke
-			ctx.lineWidth = 2
-			ctx.shadowColor = P.ghostGlow
-			ctx.shadowBlur = 16
-			ctx.stroke()
-			ctx.shadowBlur = 0
-			ctx.restore()
-
-			ctx.beginPath()
-			prices.forEach((p, i) => {
-				const x = xS(i),
-					y = yS(p)
-				i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
-			})
-			ctx.lineTo(xS(prices.length - 1), baseY)
-			ctx.lineTo(xS(0), baseY)
-			ctx.closePath()
-			const trendUp = prices[prices.length - 1] >= prices[0]
-			const areaStops = trendUp ? P.areaStopsUp : P.areaStopsDown
-			const areaGrad = ctx.createLinearGradient(0, pad.t, 0, baseY)
-			areaGrad.addColorStop(0, areaStops[0])
-			areaGrad.addColorStop(0.28, areaStops[1])
-			areaGrad.addColorStop(0.52, areaStops[2])
-			areaGrad.addColorStop(0.78, areaStops[3])
-			areaGrad.addColorStop(1, areaStops[4])
-			ctx.fillStyle = areaGrad
-			ctx.fill()
-
-			ctx.save()
-			ctx.setLineDash([3, 5])
-			ctx.lineWidth = 0.8
-			prices.forEach((p, i) => {
-				if (i % 3 !== 0) return
-				const x = xS(i),
-					y = yS(p)
-				const up = y - (18 + rnd(i * 7) * 28)
-				const hr = heatAt(i)
-				ctx.strokeStyle = hr > 0.45 || rnd(i * 13) > 0.62 ? P.wickDashHot(hr) : P.wickDashBase
-				ctx.beginPath()
-				ctx.moveTo(x, y)
-				ctx.lineTo(x, up)
-				ctx.stroke()
-			})
-			ctx.setLineDash([])
-			ctx.restore()
-
-			ctx.lineJoin = "round"
-			ctx.lineCap = "round"
-
-			const lineGrad = ctx.createLinearGradient(pad.l, pad.t, w - pad.r, baseY)
-			lineGrad.addColorStop(0, P.lineGradStops[0])
-			lineGrad.addColorStop(0.2, P.lineGradStops[1])
-			lineGrad.addColorStop(0.45, P.lineGradStops[2])
-			lineGrad.addColorStop(0.62, P.lineGradStops[3])
-			lineGrad.addColorStop(0.8, P.lineGradStops[4])
-			lineGrad.addColorStop(1, P.lineGradStops[5])
-
-			ctx.beginPath()
-			prices.forEach((p, i) => {
-				const x = xS(i),
-					y = yS(p)
-				i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
-			})
-			ctx.strokeStyle = P.lineOuterStroke
-			ctx.lineWidth = 12
-			ctx.shadowColor = P.lineOuterGlow
-			ctx.shadowBlur = 26
-			ctx.stroke()
-			ctx.shadowBlur = 0
-
-			ctx.beginPath()
-			prices.forEach((p, i) => {
-				const x = xS(i),
-					y = yS(p)
-				i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
-			})
-			ctx.strokeStyle = P.lineMidStroke
-			ctx.lineWidth = 4.5
-			ctx.shadowColor = P.lineMidGlow
-			ctx.shadowBlur = 16
-			ctx.stroke()
-			ctx.shadowBlur = 0
-
-			ctx.beginPath()
-			prices.forEach((p, i) => {
-				const x = xS(i),
-					y = yS(p)
-				i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
-			})
-			ctx.strokeStyle = lineGrad
-			ctx.lineWidth = 2
-			ctx.shadowColor = P.lineMainGlow
-			ctx.shadowBlur = 10
-			ctx.stroke()
-			ctx.shadowBlur = 0
-
-			const nC = prices.length
-			const segW = cw / Math.max(1, nC - 1)
-			const bodyW = Math.min(16, Math.max(3.5, segW * 0.58))
-			const wickW = Math.max(1.1, Math.min(2, bodyW * 0.16))
-			const rng = (max - min) * 0.0058
-
-			for (let i = 0; i < nC; i++) {
-				const open = i > 0 ? prices[i - 1] : prices[i]
-				const close = prices[i]
-				const hi = Math.max(open, close) + rng * (0.55 + rnd(i * 1.71 + t * 0.06) * 4.8)
-				const lo = Math.min(open, close) - rng * (0.5 + rnd(i * 2.29 + t * 0.05) * 4.5)
-				const x = xS(i)
-				const yHi = yS(hi)
-				const yLo = yS(lo)
-				const yO = yS(open)
-				const yC = yS(close)
-				let top = Math.min(yO, yC)
-				let bot = Math.max(yO, yC)
-				let bodyH = bot - top
-				if (bodyH < 1) {
-					const ym = (yO + yC) * 0.5
-					top = ym - 0.5
-					bot = ym + 0.5
-					bodyH = 1
-				}
-				const bear = close < open
-
-				ctx.beginPath()
-				ctx.moveTo(x, yHi)
-				ctx.lineTo(x, yLo)
-				ctx.strokeStyle = bear ? P.wickBear : P.wickBull
-				ctx.lineWidth = wickW
-				ctx.lineCap = "butt"
-				ctx.stroke()
-
-				const bg = ctx.createLinearGradient(x - bodyW * 0.5, top, x + bodyW * 0.5, bot)
-				const stops = bear ? P.bearGrad : P.bullGrad
-				bg.addColorStop(0, stops[0])
-				bg.addColorStop(bear ? 0.55 : 0.45, stops[1])
-				bg.addColorStop(1, stops[2])
-				ctx.fillStyle = bg
-				ctx.shadowColor = bear ? P.bearGlow : P.bullGlow
-				ctx.shadowBlur = bear ? 10 : 8
-				ctx.fillRect(x - bodyW * 0.5, top, bodyW, bodyH)
-				ctx.shadowBlur = 0
-
-				ctx.strokeStyle = bear ? P.bodyStrokeBear : P.bodyStrokeBull
-				ctx.lineWidth = 0.65
-				ctx.strokeRect(x - bodyW * 0.5, top, bodyW, bodyH)
-			}
-
-			const last = prices[prices.length - 1]
-			const lx = xS(prices.length - 1),
-				ly = yS(last)
-
-			const lastDown = prices.length > 1 && last < prices[prices.length - 2]
-			const pulse = 0.5 + 0.5 * Math.sin(t * 4.2)
-			ctx.beginPath()
-			ctx.arc(lx, ly, 8 + pulse * 5, 0, Math.PI * 2)
-			ctx.strokeStyle = lastDown ? P.lastPulseDown(0.14 + pulse * 0.24) : P.lastPulseUp(0.12 + pulse * 0.22)
-			ctx.lineWidth = 1.5
-			ctx.stroke()
-
-			ctx.beginPath()
-			ctx.arc(lx, ly, 4.2, 0, Math.PI * 2)
-			ctx.fillStyle = lastDown ? P.lastDotDown : P.lastDotUp
-			ctx.shadowColor = lastDown ? P.lastDotDownGlow : P.lastDotUpGlow
-			ctx.shadowBlur = 22
-			ctx.fill()
-			ctx.shadowBlur = 0
-
-			ctx.beginPath()
-			ctx.arc(lx, ly, 1.6, 0, Math.PI * 2)
-			ctx.fillStyle = P.lastDotCore
-			ctx.fill()
-
-			ctx.save()
-			ctx.font = '300 11.5px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace'
-			ctx.fillStyle = P.priceText
-			ctx.shadowColor = P.priceShadow
-			ctx.shadowBlur = 4
-			ctx.fillText(`$ ${last.toFixed(2)}`, lx + 11, ly - 5)
-			ctx.shadowBlur = 0
-			ctx.restore()
-
-			ctx.font = "11px ui-monospace, monospace"
-			ctx.fillStyle = P.axisText
-			ctx.textAlign = "right"
-			for (let i = 0; i <= 4; i++) {
-				const val = min + (max - min) * (i / 4)
-				const y = pad.t + ch - (i / 4) * ch
-				ctx.fillText("$" + val.toFixed(0), pad.l - 8, y + 4)
-			}
-			ctx.textAlign = "left"
-
-			ctx.save()
-			const scanGrad = ctx.createLinearGradient(0, scanY - 14, 0, scanY + 14)
-			scanGrad.addColorStop(0, P.scanStops[0])
-			scanGrad.addColorStop(0.35, P.scanStops[1])
-			scanGrad.addColorStop(0.5, P.scanStops[2])
-			scanGrad.addColorStop(0.65, P.scanStops[3])
-			scanGrad.addColorStop(1, P.scanStops[4])
-			ctx.fillStyle = scanGrad
-			ctx.fillRect(pad.l, scanY - 16, cw, 32)
-			ctx.restore()
-
-			ctx.save()
-			ctx.font = "10px ui-monospace, monospace"
-			const tick = Math.floor(t * 8) % 1000
-			const tickWarm = Math.sin(hudPhase * 1.3) > 0.25
-			ctx.fillStyle = tickWarm
-				? P.hudTextWarm(0.14 + 0.05 * Math.sin(hudPhase))
-				: P.hudTextCool(0.12 + 0.06 * Math.sin(hudPhase))
-			ctx.fillText(
-				`▸ ${tick.toString().padStart(3, "0")}  ${(last * 1.0001).toFixed(4)}  ${(last * 0.9997).toFixed(4)}  VOL_SIM`,
-				pad.l,
-				h - 22
-			)
-			hudLines.forEach((line, i) => {
-				ctx.fillStyle = P.hudTextBlue(0.06 + 0.04 * Math.sin(hudPhase + i))
-				ctx.fillText(line, w - pad.r + 4, pad.t + 14 + i * 13)
-			})
-			if (Math.sin(t * 0.7) > 0.65) {
-				ctx.fillStyle = P.streamOk
-				ctx.fillText("STREAM_OK", w - pad.r + 4, pad.t + 14 + hudLines.length * 13)
-			}
-			ctx.restore()
-
-			frameRef.current = requestAnimationFrame(draw)
 		}
 
+		const draw = (ts: number) => {
+			frame = 0
+			const P = paletteRef.current
+			// rAF timestamps can be slightly earlier than the performance.now() of the first call — never go negative.
+			const dtMs = lastTs ? Math.max(0, Math.min(64, ts - lastTs)) : 16
+			lastTs = ts
+			const dt = dtMs / 1000
+
+			// Advance the live candle; roll over to a new one every CANDLE_MS.
+			if (!reduceMotion) {
+				const live = candles[candles.length - 1]
+				tick(live, dtMs / CANDLE_MS)
+				candleElapsed += dtMs
+				if (candleElapsed >= CANDLE_MS) {
+					candleElapsed -= CANDLE_MS
+					candles.push(openCandle(live.c))
+					if (candles.length > MAX_HISTORY) candles.shift()
+					if (--regimeLeft <= 0) nextRegime()
+				}
+			}
+			const progress = reduceMotion ? 0 : candleElapsed / CANDLE_MS
+
+			// --- Layout -------------------------------------------------------------------------
+			const narrow = cssW < 420
+			const axisW = narrow ? 44 : 54
+			const padL = 0
+			const priceTop = narrow ? 64 : 68
+			const padB = 6
+			const plotR = cssW - axisW
+			const volH = Math.round((cssH - priceTop) * 0.1)
+			const volBase = cssH - padB
+			const priceBottom = volBase - volH - 14
+			const slot = narrow ? 8 : 9
+			const bodyW = Math.max(3, Math.round(slot * 0.6))
+			const liveX = plotR - slot * (FORECAST_STEPS + 1)
+			const visibleCount = Math.min(candles.length, Math.ceil((liveX - padL) / slot) + 2)
+			const visible = candles.slice(candles.length - visibleCount)
+			const xOf = (i: number) => liveX - (visible.length - 1 - i + progress) * slot
+
+			const closes = candles.map((c) => c.c)
+			const emaAll = emaSeries(closes, 21)
+			const ema = emaAll.slice(emaAll.length - visibleCount)
+			const liveCandle = visible[visible.length - 1]
+
+			// Forecast: damped momentum, eased so it does not jitter, capped so it never shoots off.
+			const avgRange =
+				visible.slice(-20).reduce((sum, c) => sum + (c.h - c.l), 0) / Math.min(20, visible.length) || 1
+			const momentum = (liveCandle.c - ema[ema.length - 1]) * 0.12 + drift * 0.5
+			const targetSlope = Math.max(-avgRange * 0.45, Math.min(avgRange * 0.45, momentum))
+			forecastSlope += (targetSlope - forecastSlope) * Math.min(1, dt * 1.2)
+			const forecast = Array.from({ length: FORECAST_STEPS + 1 }, (_, k) => {
+				const mid = liveCandle.c + forecastSlope * k * (1 - k / (FORECAST_STEPS * 2.5))
+				const spread = avgRange * 0.32 * Math.sqrt(k)
+				return { mid, lo: mid - spread, hi: mid + spread }
+			})
+
+			// Scale on candles + forecast midline (not the band) so price action uses the full height.
+			let tMin = Infinity
+			let tMax = -Infinity
+			for (const c of visible) {
+				tMin = Math.min(tMin, c.l)
+				tMax = Math.max(tMax, c.h)
+			}
+			for (const f of forecast) {
+				tMin = Math.min(tMin, f.mid)
+				tMax = Math.max(tMax, f.mid)
+			}
+			const margin = (tMax - tMin) * 0.06 || 1
+			tMin -= margin
+			tMax += margin
+			if (!yMax || reduceMotion) {
+				yMin = tMin
+				yMax = tMax
+			} else {
+				const k = Math.min(1, dt * 2.5)
+				yMin += (tMin - yMin) * k
+				yMax += (tMax - yMax) * k
+			}
+			const yOf = (p: number) => priceBottom - ((p - yMin) / (yMax - yMin)) * (priceBottom - priceTop)
+			const crisp = (v: number) => Math.round(v) + 0.5
+
+			ctx.clearRect(0, 0, cssW, cssH)
+			ctx.font = `${narrow ? 10 : 10.5}px ${fontFamily}`
+			ctx.textBaseline = "middle"
+			ctx.lineWidth = 1
+
+			// --- Grid + price axis ---------------------------------------------------------------
+			const step = niceStep(yMax - yMin, narrow ? 3 : 4)
+			const tagY = yOf(candles[candles.length - 1].c)
+			ctx.textAlign = "left"
+			for (let v = Math.ceil(yMin / step) * step; v <= yMax; v += step) {
+				const y = crisp(yOf(v))
+				if (y < priceTop || y > priceBottom) continue
+				ctx.strokeStyle = P.ink(0.06)
+				ctx.beginPath()
+				ctx.moveTo(padL, y)
+				ctx.lineTo(plotR, y)
+				ctx.stroke()
+				// Skip axis labels hidden behind the live price tag.
+				if (Math.abs(y - tagY) < 14) continue
+				ctx.fillStyle = P.ink(0.38)
+				ctx.fillText(v.toFixed(step < 1 ? 1 : 0), plotR + 10, y)
+			}
+			// Hairline separating price and volume panes
+			ctx.strokeStyle = P.ink(0.08)
+			ctx.beginPath()
+			ctx.moveTo(padL, crisp(volBase - volH - 7))
+			ctx.lineTo(plotR, crisp(volBase - volH - 7))
+			ctx.stroke()
+
+			ctx.save()
+			ctx.beginPath()
+			ctx.rect(padL, 0, plotR - padL, cssH)
+			ctx.clip()
+
+			// --- Volume -------------------------------------------------------------------------
+			const maxVol = Math.max(...visible.map((c) => c.v), 1)
+			visible.forEach((c, i) => {
+				const h = Math.max(1, (c.v / maxVol) * volH)
+				const isLive = i === visible.length - 1
+				ctx.fillStyle = isLive ? hexAlpha(P.accent, 0.5) : P.ink(c.c >= c.o ? 0.16 : 0.1)
+				ctx.fillRect(Math.round(xOf(i) - bodyW / 2), volBase - h, bodyW, h)
+			})
+
+			// --- EMA 21 -------------------------------------------------------------------------
+			ctx.strokeStyle = P.ink(0.3)
+			ctx.lineWidth = 1.25
+			ctx.lineJoin = "round"
+			ctx.beginPath()
+			ema.forEach((v, i) => {
+				const x = xOf(i)
+				const y = yOf(v)
+				if (i === 0) ctx.moveTo(x, y)
+				else {
+					const px = xOf(i - 1)
+					const py = yOf(ema[i - 1])
+					ctx.quadraticCurveTo(px, py, (px + x) / 2, (py + y) / 2)
+				}
+			})
+			ctx.lineTo(xOf(ema.length - 1), yOf(ema[ema.length - 1]))
+			ctx.stroke()
+			ctx.lineWidth = 1
+
+			// --- Candles: hollow = up, filled = down ---------------------------------------------
+			visible.forEach((c, i) => {
+				const isLive = i === visible.length - 1
+				const x = Math.round(xOf(i))
+				const up = c.c >= c.o
+				const top = Math.round(yOf(Math.max(c.o, c.c)))
+				const bottom = Math.round(yOf(Math.min(c.o, c.c)))
+				const height = Math.max(1, bottom - top)
+				const left = x - Math.floor(bodyW / 2)
+				const color = isLive ? P.accent : P.ink(up ? 0.85 : 0.42)
+
+				ctx.strokeStyle = color
+				ctx.beginPath()
+				ctx.moveTo(x + 0.5, Math.round(yOf(c.h)))
+				ctx.lineTo(x + 0.5, top)
+				ctx.moveTo(x + 0.5, top + height)
+				ctx.lineTo(x + 0.5, Math.round(yOf(c.l)))
+				ctx.stroke()
+
+				if (up && height > 2) {
+					ctx.strokeRect(left + 0.5, top + 0.5, bodyW - 1, height - 1)
+				} else {
+					ctx.fillStyle = color
+					ctx.fillRect(left, top, bodyW, height)
+				}
+			})
+
+			// --- Forecast: soft band + dotted path in the accent colour ------------------------
+			const fx = (k: number) => liveX + k * slot
+			const band = ctx.createLinearGradient(liveX, 0, fx(FORECAST_STEPS), 0)
+			band.addColorStop(0, hexAlpha(P.accent, 0.16))
+			band.addColorStop(1, hexAlpha(P.accent, 0.02))
+			ctx.fillStyle = band
+			ctx.beginPath()
+			forecast.forEach((f, k) => (k === 0 ? ctx.moveTo(fx(k), yOf(f.hi)) : ctx.lineTo(fx(k), yOf(f.hi))))
+			for (let k = FORECAST_STEPS; k >= 0; k--) ctx.lineTo(fx(k), yOf(forecast[k].lo))
+			ctx.closePath()
+			ctx.fill()
+			ctx.fillStyle = P.accent
+			forecast.forEach((f, k) => {
+				if (k === 0) return
+				ctx.globalAlpha = 1 - (k / FORECAST_STEPS) * 0.65
+				ctx.beginPath()
+				ctx.arc(fx(k), yOf(f.mid), 1.4, 0, Math.PI * 2)
+				ctx.fill()
+			})
+			ctx.globalAlpha = 1
+			ctx.restore()
+
+			// --- Live price line + tag ----------------------------------------------------------
+			const lastPrice = liveCandle.c
+			const ly = crisp(yOf(lastPrice))
+			ctx.strokeStyle = hexAlpha(P.accent, 0.45)
+			ctx.setLineDash([1, 3])
+			ctx.beginPath()
+			ctx.moveTo(padL, ly)
+			ctx.lineTo(plotR, ly)
+			ctx.stroke()
+			ctx.setLineDash([])
+			ctx.fillStyle = P.accent
+			ctx.beginPath()
+			ctx.roundRect(plotR + 3, ly - 9, axisW - 5, 18, 3)
+			ctx.fill()
+			ctx.fillStyle = P.accentInk
+			ctx.textAlign = "center"
+			ctx.fillText(lastPrice.toFixed(2), plotR + 3 + (axisW - 5) / 2, ly + 0.5)
+
+			// --- Crosshair (mouse only) ---------------------------------------------------------
+			if (pointer && pointer.x > padL && pointer.x < plotR && pointer.y > priceTop && pointer.y < cssH - padB) {
+				const idx = Math.round(visible.length - 1 - progress - (liveX - pointer.x) / slot)
+				const candle = visible[idx]
+				const cx = candle ? crisp(xOf(idx)) : pointer.x
+				ctx.strokeStyle = P.ink(0.25)
+				ctx.setLineDash([2, 3])
+				ctx.beginPath()
+				ctx.moveTo(padL, crisp(pointer.y))
+				ctx.lineTo(plotR, crisp(pointer.y))
+				ctx.moveTo(cx, priceTop)
+				ctx.lineTo(cx, cssH - padB)
+				ctx.stroke()
+				ctx.setLineDash([])
+				if (candle) {
+					const rows: [string, number][] = [
+						["O", candle.o],
+						["H", candle.h],
+						["L", candle.l],
+						["C", candle.c]
+					]
+					const boxW = 86
+					const boxH = 66
+					const bx = cx + 10 + boxW > plotR ? cx - 10 - boxW : cx + 10
+					const by = Math.min(Math.max(priceTop, pointer.y - boxH / 2), cssH - padB - boxH)
+					ctx.fillStyle = P.tooltipBg
+					ctx.strokeStyle = P.ink(0.12)
+					ctx.beginPath()
+					ctx.roundRect(bx + 0.5, by + 0.5, boxW, boxH, 4)
+					ctx.fill()
+					ctx.stroke()
+					ctx.textAlign = "left"
+					rows.forEach(([label, value], r) => {
+						ctx.fillStyle = P.ink(0.4)
+						ctx.fillText(label, bx + 10, by + 13 + r * 13.5)
+						ctx.fillStyle = P.ink(0.9)
+						ctx.fillText(value.toFixed(2), bx + 26, by + 13 + r * 13.5)
+					})
+				}
+			}
+
+			if (ts - lastHeaderUpdate > 300 || !lastHeaderUpdate) {
+				lastHeaderUpdate = ts
+				updateHeader(lastPrice)
+			}
+
+			if (isVisible && !reduceMotion) frame = requestAnimationFrame(draw)
+		}
+
+		// Animate only while on screen. With reduced motion a single static frame is painted on demand.
+		let frame = 0
+		let isVisible = true
+		function requestDraw() {
+			if (!frame) frame = requestAnimationFrame(draw)
+		}
+		redrawRef.current = requestDraw
+		const visibilityObserver = new IntersectionObserver(([entry]) => {
+			isVisible = entry.isIntersecting
+			if (isVisible && !frame) {
+				lastTs = 0
+				frame = requestAnimationFrame(draw)
+			}
+		})
+		visibilityObserver.observe(canvas)
 		draw(performance.now())
 
 		return () => {
-			if (frameRef.current) cancelAnimationFrame(frameRef.current)
-			window.removeEventListener("resize", resize)
+			redrawRef.current = null
+			cancelAnimationFrame(frame)
+			visibilityObserver.disconnect()
+			resizeObserver.disconnect()
+			canvas.removeEventListener("pointermove", onPointerMove)
+			canvas.removeEventListener("pointerleave", onPointerLeave)
 		}
 	}, [])
 
 	return (
-		<div className="relative h-full w-full overflow-hidden rounded-2xl bg-[#fafafa] dark:bg-black">
-			<canvas ref={canvasRef} className="h-full w-full" />
+		<div className="relative h-full w-full overflow-hidden rounded-xl bg-[#fafafa] ring-1 ring-black/5 dark:bg-[#0b0b0d] dark:ring-white/8">
+			<canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
+
+			<div className="pointer-events-none absolute inset-x-4 top-3 flex items-start justify-between gap-3">
+				<div className="min-w-0">
+					<div className="text-[10px] uppercase tracking-[0.18em] text-zinc-500">ANLT / PLN</div>
+					<div className="mt-1 flex items-baseline gap-2.5">
+						<span
+							ref={priceRef}
+							className="text-xl font-semibold tabular-nums tracking-tight text-zinc-900 dark:text-zinc-50"
+						/>
+						<span ref={changeRef} className="text-[11px] tabular-nums text-zinc-500 dark:text-zinc-400" />
+					</div>
+				</div>
+
+				<div className="flex flex-col items-end gap-1 pt-0.5 text-[10px] text-zinc-500">
+					<span className="flex items-center gap-1.5">
+						<span className="h-px w-3 bg-zinc-400 dark:bg-zinc-500" />
+						EMA 21
+					</span>
+					<span className="flex items-center gap-1.5 text-amber-700 dark:text-amber-400">
+						<span className="w-3 border-t border-dotted border-current" />
+						{t("forecast")}
+					</span>
+					<span className="hidden text-zinc-400 sm:inline dark:text-zinc-600">{t("simulated")}</span>
+				</div>
+			</div>
 		</div>
 	)
 }

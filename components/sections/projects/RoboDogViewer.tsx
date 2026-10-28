@@ -6,8 +6,9 @@ import { useGLTF, Environment, Center, OrbitControls } from "@react-three/drei"
 import { EffectComposer, Bloom, Vignette, BrightnessContrast, ToneMapping } from "@react-three/postprocessing"
 import { ToneMappingMode, BlendFunction } from "postprocessing"
 import { ACESFilmicToneMapping, Vector3 } from "three"
-import type { Object3D, Mesh, DirectionalLight } from "three"
+import type { Object3D, Mesh, DirectionalLight, Group } from "three"
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib"
+import { useInView } from "framer-motion"
 import useIsMobile from "@/hooks/useIsMobile"
 
 const MODEL_URL = "/robot_dog_unitree_go2.glb"
@@ -31,8 +32,6 @@ function RoboDogModel() {
 	return <primitive object={scene} />
 }
 
-useGLTF.preload(MODEL_URL)
-
 function AutoResume({
 	controlsRef,
 	isInteracting
@@ -48,6 +47,15 @@ function AutoResume({
 		const next = current + (targetSpeed - current) * 0.05
 		controls.autoRotateSpeed = Math.abs(next) < 0.001 ? 0 : next
 		controls.autoRotate = !isInteracting
+	})
+	return null
+}
+
+// Touch devices get a self-rotating model instead of OrbitControls, which would capture
+// the finger and block page scrolling over the canvas.
+function AutoSpin({ groupRef }: { groupRef: React.RefObject<Group | null> }) {
+	useFrame((_, delta) => {
+		if (groupRef.current) groupRef.current.rotation.y += delta * 0.35
 	})
 	return null
 }
@@ -94,6 +102,9 @@ export default function RoboDogViewer() {
 	const [isInteracting, setIsInteracting] = useState(false)
 	const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 	const isMobile = useIsMobile()
+	const wrapperRef = useRef<HTMLDivElement>(null)
+	const inView = useInView(wrapperRef, { margin: "100px 0px" })
+	const spinRef = useRef<Group | null>(null)
 
 	const clearIdleTimer = () => {
 		if (idleTimerRef.current) {
@@ -115,78 +126,89 @@ export default function RoboDogViewer() {
 	useEffect(() => () => clearIdleTimer(), [])
 
 	return (
-		<Canvas
-			shadows={!isMobile}
-			dpr={isMobile ? 1 : [1, 2]}
-			camera={{ position: [0.57, 0.34, 0.68], fov: 42 }}
-			gl={{
-				antialias: !isMobile,
-				alpha: true,
-				powerPreference: isMobile ? "low-power" : "high-performance",
-				toneMapping: ACESFilmicToneMapping,
-				toneMappingExposure: 1.0
-			}}
-			style={{ background: "transparent" }}
-		>
-			<ambientLight intensity={isMobile ? 0.35 : 0.15} />
+		<div ref={wrapperRef} className="h-full w-full" style={isMobile ? { touchAction: "pan-y" } : undefined}>
+			<Canvas
+				frameloop={inView ? "always" : "never"}
+				shadows={!isMobile}
+				dpr={isMobile ? 1 : [1, 2]}
+				camera={{ position: [0.57, 0.34, 0.68], fov: 42 }}
+				gl={{
+					antialias: !isMobile,
+					alpha: true,
+					powerPreference: isMobile ? "low-power" : "high-performance",
+					toneMapping: ACESFilmicToneMapping,
+					toneMappingExposure: 1.0
+				}}
+				style={{ background: "transparent" }}
+			>
+				<ambientLight intensity={isMobile ? 0.35 : 0.15} />
 
-			<directionalLight
-				ref={sunRef}
-				position={[4, 5, 3]}
-				intensity={2.2}
-				color="#d8e6ff"
-				castShadow={!isMobile}
-				shadow-mapSize-width={isMobile ? 512 : 2048}
-				shadow-mapSize-height={isMobile ? 512 : 2048}
-				shadow-bias={-0.0001}
-				shadow-camera-near={0.1}
-				shadow-camera-far={20}
-				shadow-camera-left={-4}
-				shadow-camera-right={4}
-				shadow-camera-top={4}
-				shadow-camera-bottom={-4}
-			/>
+				<directionalLight
+					ref={sunRef}
+					position={[4, 5, 3]}
+					intensity={2.2}
+					color="#d8e6ff"
+					castShadow={!isMobile}
+					shadow-mapSize-width={isMobile ? 512 : 2048}
+					shadow-mapSize-height={isMobile ? 512 : 2048}
+					shadow-bias={-0.0001}
+					shadow-camera-near={0.1}
+					shadow-camera-far={20}
+					shadow-camera-left={-4}
+					shadow-camera-right={4}
+					shadow-camera-top={4}
+					shadow-camera-bottom={-4}
+				/>
 
-			{!isMobile && (
-				<CameraFollowSun lightRef={sunRef} offset={[2.5, 3.5, 2]} target={[0, -0.3, 0]} />
+				{!isMobile && (
+					<CameraFollowSun lightRef={sunRef} offset={[2.5, 3.5, 2]} target={[0, -0.3, 0]} />
 			)}
 
-			<directionalLight position={[-3.5, 2.5, 2]} intensity={0.35} color="#9bb8ff" />
+				<directionalLight position={[-3.5, 2.5, 2]} intensity={0.35} color="#9bb8ff" />
 
-			<directionalLight position={[-1.5, 2.5, -3.5]} intensity={1.6} color="#e6efff" />
+				<directionalLight position={[-1.5, 2.5, -3.5]} intensity={1.6} color="#e6efff" />
 
-			<Suspense fallback={null}>
-				<Center disableY={false} position={[0, -0.3, 0]}>
-					<RoboDogModel />
-				</Center>
-				{!isMobile && <Environment preset="night" environmentIntensity={0.4} />}
-			</Suspense>
+				<Suspense fallback={null}>
+					<group ref={spinRef} position={[0, -0.3, 0]}>
+						<Center disableY={false}>
+							<RoboDogModel />
+						</Center>
+					</group>
+					{!isMobile && <Environment preset="night" environmentIntensity={0.4} />}
+				</Suspense>
 
-			{!isMobile && (
-				<EffectComposer multisampling={4}>
-					<Bloom intensity={0.45} luminanceThreshold={0.75} luminanceSmoothing={0.25} mipmapBlur />
-					<BrightnessContrast brightness={0.04} contrast={0.12} />
-					<ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-					<Vignette offset={0.3} darkness={0.35} blendFunction={BlendFunction.NORMAL} />
-				</EffectComposer>
+				{!isMobile && (
+					<EffectComposer multisampling={4}>
+						<Bloom intensity={0.45} luminanceThreshold={0.75} luminanceSmoothing={0.25} mipmapBlur />
+						<BrightnessContrast brightness={0.04} contrast={0.12} />
+						<ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
+						<Vignette offset={0.3} darkness={0.35} blendFunction={BlendFunction.NORMAL} />
+					</EffectComposer>
 			)}
 
-			<OrbitControls
-				ref={controlsRef}
-				target={[0, -0.3, 0]}
-				enablePan={false}
-				enableZoom={false}
-				enableDamping
-				dampingFactor={0.1}
-				autoRotate
-				autoRotateSpeed={AUTO_ROTATE_SPEED}
-				minPolarAngle={Math.PI / 3.2}
-				maxPolarAngle={Math.PI / 1.9}
-				onStart={handleStart}
-				onEnd={handleEnd}
-			/>
+			{isMobile ? (
+				<AutoSpin groupRef={spinRef} />
+			) : (
+				<>
+					<OrbitControls
+						ref={controlsRef}
+						target={[0, -0.3, 0]}
+						enablePan={false}
+						enableZoom={false}
+						enableDamping
+						dampingFactor={0.1}
+						autoRotate
+						autoRotateSpeed={AUTO_ROTATE_SPEED}
+						minPolarAngle={Math.PI / 3.2}
+						maxPolarAngle={Math.PI / 1.9}
+						onStart={handleStart}
+						onEnd={handleEnd}
+					/>
 
-			<AutoResume controlsRef={controlsRef} isInteracting={isInteracting} />
-		</Canvas>
+					<AutoResume controlsRef={controlsRef} isInteracting={isInteracting} />
+				</>
+			)}
+			</Canvas>
+		</div>
 	)
 }

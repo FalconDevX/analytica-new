@@ -58,6 +58,16 @@ const Navbar = () => {
 		[applyActiveSection]
 	)
 
+	const scrollToSection = useCallback(
+		(section: SectionId) => {
+			selectSection(section)
+			document.getElementById(section)?.scrollIntoView({ behavior: "smooth", block: "start" })
+			// Keep the URL shareable without adding a history entry or reloading the page.
+			history.replaceState(null, "", section === "home" ? window.location.pathname + window.location.search : `#${section}`)
+		},
+		[selectSection]
+	)
+
 	const updateIndicator = useCallback(() => {
 		const shell = navShellRef.current
 		const parent = desktopNavRef.current
@@ -140,30 +150,33 @@ const Navbar = () => {
 			/>
 			<div className="relative z-10 flex h-full w-full items-center justify-center gap-2 sm:gap-4 lg:gap-8">
 				<div className="flex min-w-0 flex-1 lg:w-1/3 flex-row pl-3 lg:pl-10">
-					<div
-						onClick={() => {
-							window.location.href = "/"
+					<a
+						href="#home"
+						aria-label="AGH Analytica"
+						onClick={(e) => {
+							e.preventDefault()
+							scrollToSection("home")
 						}}
 						className="flex min-w-0 items-center justify-center cursor-pointer"
 					>
 						<img
-							src="/analytica_logo1-white.png"
-							alt="logo"
+							src="/analytica_logo1-white.webp"
+							alt=""
 							className="w-10 h-10 hidden dark:block object-cover shrink-0"
 						/>
 						<img
-							src="/text-logo-white.png"
-							alt="logo"
+							src="/text-logo-white.webp"
+							alt=""
 							className="w-auto h-10 pt-1 hidden dark:sm:block object-cover shrink-0"
 						/>
 
-						<img src="/analytica_logo1-black.png" alt="logo" className="w-10 h-10 dark:hidden object-cover shrink-0" />
+						<img src="/analytica_logo1-black.webp" alt="" className="w-10 h-10 dark:hidden object-cover shrink-0" />
 						<img
-							src="/text-logo-black.png"
-							alt="logo"
+							src="/text-logo-black.webp"
+							alt=""
 							className="w-auto h-10 pt-1 hidden sm:block dark:hidden object-cover shrink-0"
 						/>
-					</div>
+					</a>
 				</div>
 				<div
 					ref={desktopNavRef}
@@ -220,6 +233,7 @@ const Navbar = () => {
 					<DropdownMenu modal={false} open={isOpen} onOpenChange={setIsOpen}>
 						<DropdownMenuTrigger asChild>
 							<Button
+								aria-label="Menu"
 								className={cn("lg:hidden min-h-11 min-w-11 cursor-pointer", isForcedMobile && "lg:inline-flex")}
 							>
 								<MenuIcon className="w-4 h-4" />
@@ -229,55 +243,37 @@ const Navbar = () => {
 						<DropdownMenuContent align="end" sideOffset={8} className="min-w-44 flex flex-col gap-1 p-2">
 							<DropdownMenuItem
 								className={navLinkClassMobile(activeSection, "home")}
-								onClick={() => {
-									selectSection("home")
-									window.location.href = "/"
-								}}
+								onSelect={() => scrollToSection("home")}
 							>
 								{t("home")}
 							</DropdownMenuItem>
 							<DropdownMenuItem
 								className={navLinkClassMobile(activeSection, "about")}
-								onClick={() => {
-									selectSection("about")
-									window.location.href = "/#about"
-								}}
+								onSelect={() => scrollToSection("about")}
 							>
 								{t("about")}
 							</DropdownMenuItem>
 							<DropdownMenuItem
 								className={navLinkClassMobile(activeSection, "team")}
-								onClick={() => {
-									selectSection("team")
-									window.location.href = "/#team"
-								}}
+								onSelect={() => scrollToSection("team")}
 							>
 								{t("team")}
 							</DropdownMenuItem>
 							<DropdownMenuItem
 								className={navLinkClassMobile(activeSection, "projects")}
-								onClick={() => {
-									selectSection("projects")
-									window.location.href = "/#projects"
-								}}
+								onSelect={() => scrollToSection("projects")}
 							>
 								{t("projects")}
 							</DropdownMenuItem>
 							<DropdownMenuItem
 								className={navLinkClassMobile(activeSection, "recruitment")}
-								onClick={() => {
-									selectSection("recruitment")
-									window.location.href = "/#recruitment"
-								}}
+								onSelect={() => scrollToSection("recruitment")}
 							>
 								{t("recruitment")}
 							</DropdownMenuItem>
 							<DropdownMenuItem
 								className={navLinkClassMobile(activeSection, "contact")}
-								onClick={() => {
-									selectSection("contact")
-									window.location.href = "/#contact"
-								}}
+								onSelect={() => scrollToSection("contact")}
 							>
 								{t("contact")}
 							</DropdownMenuItem>
